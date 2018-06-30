@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.use('/public', express.static('public'))
+app.use('/public', express.static('node_modules'))
 
-app.listen(process.env.PORT || 3000, () => console.log('Example app listening on port 3000!'))
+app.get('/*', (req, res) => res.sendFile(__dirname + '/public/index.html'))
+
+app.listen(process.env.PORT || 3000, () => console.log('App listening on port 3000!'))
