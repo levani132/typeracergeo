@@ -89,9 +89,10 @@ toLoad.map(module => `${modulesPath}${module}${modulesStart}`)
                 Module.loaded = true;
                 Module.afterLoadCallBack();
             }
-        })
+        });
     });
 
 if(!toLoadLength){
     Module.loaded = true;
+    Module.afterLoadCallBack();
 }
