@@ -29,9 +29,17 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
 :root{
     --light-color: #F5F5F5;
+    --compl-color: #bd4802;
+    --lighter-color: #0397ef;
     --dark-color: #0277BD;
+    --darker-color: #01578b;
 }
 
 article,aside,details,figcaption,figure,
@@ -54,15 +62,18 @@ a, a:focus, a:active, a:visited {
 }
 
 body {
-    background-color: #F2F2F2;
+    background-color: var(--light-color);
     font-family: 'bpg nino', 'bpg mrglovani';
     overflow-x: hidden;
 }
 
 header {
-    background-color: #0277BD;
+    background-color: var(--dark-color);
     height: 110px;
     box-shadow: 0px 3px 2px #ddd;
+    min-width: 1000px;
+    position: relative;
+    z-index: 1000;
 }
 
 .header-left{
@@ -81,6 +92,15 @@ header {
     margin-right: -80px;
     padding-right: 100px;
     padding-left: 60px;
+}
+
+.header-right a {
+    color: var(--dark-color);
+    opacity: 1;
+}
+
+.header-right a:hover {
+    opacity: 0.8;
 }
 
 .header-right>*{
@@ -137,12 +157,19 @@ header {
 }
 
 .user-mini-info-item {
-    margin-left: 15px;
     transform: skewX(-45deg);
     font-size: 15px;
     background-color: var(--light-color);
     box-shadow: 0px 0px 2px #888;
     padding: 5px;
+    margin-left: 15px;
+    transition: transform 0.2s, background-color 0.2s;
+    cursor: pointer;
+}
+
+.user-mini-info-item:hover:not(:last-child){
+    transform: skewX(-45deg) translateY(1px);
+    background-color: #ddd;
 }
 
 .user-mini-info-item:last-child{
@@ -158,6 +185,7 @@ header {
 
 .user-mini-info-text {
     margin-left: 20px;
+    margin-top: 2px;
 }
 
 .user-mini-info-text .value {
@@ -180,6 +208,62 @@ header {
     position:relative;
     top:5px;
     margin-right: 15px;
+    background-image: url(/public/img/default.png);
     background-color: var(--dark-color);
+    background-size: 50px 50px;
+    background-position: 0 7px;
+    background-repeat: no-repeat;
     display: inline-block;
+}
+
+
+.main {
+    width: 750px;
+    background-color: white;
+    height: 100%;
+    margin: 0 auto;
+    position:relative;
+    z-index: 0;
+    box-shadow: 0px 3px 2px #ddd;
+}
+
+
+.race-types{
+    padding: 20px 50px;
+    list-style: none;
+}
+
+.race-type {
+    margin: 20px 0;
+}
+
+.race-type-icon {
+    color: var(--lighter-color);
+    width: 60px;
+    text-align: center;
+}
+
+.race-type-body {
+    display: inline-block;
+    padding-left: 30px;
+}
+
+.race-type-body a {
+    color: var(--compl-color);
+}
+
+.race-type-body a:hover h1 {
+    opacity: 0.8;
+}
+
+.race-type h1 {
+    font-size: 18px;
+}
+
+.main-race h1 {
+    font-size: 22px;
+}
+
+.race-type-sub-text {
+    font-size: 14px;
 }

@@ -4,7 +4,9 @@
   "description": "Georgian TypeRacer",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.16.3"
+    "@fortawesome/fontawesome-free": "^5.1.0",
+    "express": "^4.16.3",
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {},
   "scripts": {
