@@ -281,4 +281,56 @@ header {
 
 .race-tracks {
     list-style: none;
+    padding: 20px;
+}
+
+.race-track {
+    display: flex;
+    padding: 10px 0;
+}
+
+.race-track-left {
+    width: 100%;
+
+}
+
+.race-track-right {
+    min-width: 140px;
+    padding-left: 20px;
+}
+
+.race-track-path {
+    border-bottom: dashed var(--darker-color);
+}
+
+.race-track-place {
+    height: 20px;
+}
+
+.race-track-user {
+    padding-bottom: 3px;
+    display: inline-block;
+    width: 110px;
+    position: relative;
+    left: 69%;
+}
+
+.race-track-user-heli{
+    font-size: 25px;
+    padding-left: 10px;
+    color: var(--darker-color);
+}
+
+.me .race-track-user-heli {
+    color: var(--compl-color);
+}
+
+.race-track-user-name{
+    font-size: 20px;
+    display: inline-block;
+}
+
+.me .race-track-speed {
+    font-weight: bold;
+    font-size: 20px;
 }
