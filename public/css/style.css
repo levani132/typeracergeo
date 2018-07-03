@@ -218,6 +218,7 @@ header {
 
 
 .main {
+    padding: 20px;
     width: 750px;
     background-color: white;
     height: 100%;
@@ -229,12 +230,13 @@ header {
 
 
 .race-types{
-    padding: 20px 50px;
+    padding: 0 30px;
     list-style: none;
 }
 
 .race-type {
-    margin: 20px 0;
+    margin: 20px auto;
+    width: 360px;
 }
 
 .race-type-icon {
@@ -266,4 +268,17 @@ header {
 
 .race-type-sub-text {
     font-size: 14px;
+}
+
+.race-section {
+
+}
+
+.race-state {
+    color: var(--compl-color);
+    font-weight: bold;
+}
+
+.race-tracks {
+    list-style: none;
 }
