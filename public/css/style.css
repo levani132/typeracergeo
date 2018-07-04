@@ -40,6 +40,9 @@ html, body{
     --lighter-color: #0397ef;
     --dark-color: #0277BD;
     --darker-color: #01578b;
+    --text-correct-color: #99cc00;
+    --text-incorrect-background: #f0a3a3;
+    --text-incorrect-foreground: #803333;
 }
 
 article,aside,details,figcaption,figure,
@@ -147,7 +150,7 @@ header {
     overflow: hidden;
     transition: height .4s;
     top: 110px;
-    left: 170px;
+    left: 133px;
 }
 
 .user-mini-info ul{
@@ -198,7 +201,7 @@ header {
 }
 
 .header-right:hover .user-mini-info {
-    height: 340px;
+    height: 265px;
 }
 
 .user-avatar {
@@ -270,10 +273,6 @@ header {
     font-size: 14px;
 }
 
-.race-section {
-
-}
-
 .race-state {
     color: var(--compl-color);
     font-weight: bold;
@@ -310,14 +309,14 @@ header {
 .race-track-user {
     padding-bottom: 3px;
     display: inline-block;
-    width: 110px;
+    width: 120px;
     position: relative;
-    left: 69%;
+    left: 80%; /* (0-80)% */
 }
 
 .race-track-user-heli{
     font-size: 25px;
-    padding-left: 10px;
+    padding-left: 5px;
     color: var(--darker-color);
 }
 
@@ -326,11 +325,71 @@ header {
 }
 
 .race-track-user-name{
-    font-size: 20px;
+    font-size: 14px;
+    position: relative;
+    bottom: 5px;
     display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 70px;
+    text-align: right;
 }
 
 .me .race-track-speed {
     font-weight: bold;
     font-size: 20px;
+}
+
+.race-text {
+    font-size: 20px;
+    padding: 0 20px;
+    user-select: none;
+}
+
+.race-text-correct {
+    color: var(--text-correct-color);
+    text-decoration-color: var(--text-correct-color);
+}
+
+.race-text-current {
+    text-decoration: underline;
+}
+
+.race-text-current span {
+    text-decoration: underline;
+}
+
+@keyframes wink {
+    0%   { border-color: black; }
+    50%  { border-color: rgba(0,0,0,0); }
+}
+
+.race-text-cursor {
+    border-left: 1px solid black;
+    position:relative;
+    bottom: 3px;
+    animation-name: wink;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0,0,0,1);
+}
+
+.race-text-incorrect {
+    color: var(--text-incorrect-foreground);
+    text-decoration-color: var(--text-incorrect-foreground);
+    background-color: var(--text-incorrect-background);
+    padding-top: 3px;
+    margin-top: -3px;
+}
+
+.race-input {
+    margin: 10px 20px;
+    padding: 0 5px;
+    padding-bottom: 5px;
+    font-size: 25px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: calc(100% - 50px);
 }
