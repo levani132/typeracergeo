@@ -77,22 +77,3 @@ const Module = {
         Module.afterLoadCallBacks = [];
     }
 }
-
-var toLoad = Object.keys(Module.modules).filter(module => Module.modules[module]);
-var toLoadLength = toLoad.length;
-var loaded = 0;
-
-toLoad.map(module => `${modulesPath}${module}${modulesStart}`)
-    .forEach(module => {
-        Module.loadScripts([module]).then(() => {
-            if(loaded == toLoadLength){
-                Module.loaded = true;
-                Module.afterLoadCallBack();
-            }
-        });
-    });
-
-if(!toLoadLength){
-    Module.loaded = true;
-    Module.afterLoadCallBack();
-}

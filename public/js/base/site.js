@@ -1,1 +1,3 @@
-document.querySelector('app').innerHTML = Layout.view();
+View.refresh();
+Module.loaded = true;
+Module.afterLoadCallBack();

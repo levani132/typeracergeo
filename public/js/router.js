@@ -3,6 +3,7 @@ const Router = {
         '' : 'default',
         'race' : 'default'
     },
+    components: [],
     openModule(module){
         if(!Module.checkModule(module)){
             console.error("No module with name", module);
@@ -11,6 +12,11 @@ const Router = {
         Module.afterLoad(() => {
             if (!Module.loadModule(module)) {
                 document.querySelector('router-view').innerHTML = Module.getModule(module).view();
+                var n = this.components.length;
+                while(n--){
+                    this.components[this.components.length - 1].onLoad();
+                    this.components.pop();
+                }
             }
         });
     },
@@ -19,7 +25,23 @@ const Router = {
         if (!Module.checkModule(module)){
             module = Router.routes[module];
         }
+        var header = document.querySelector('header');
+        if(header){
+            header.outerHTML = Header.view();
+        }
         this.openModule(module);
+    },
+    idRoute () {
+        return window.location.pathname.split('/')[3] || '';
+    },
+    innerRoute () {
+        return window.location.pathname.split('/')[2] || '';
+    },
+    route () {
+        return window.location.pathname.split('/')[1] || '';
+    },
+    loadMe (component) {
+        this.components.push(component);
     }
 }
 

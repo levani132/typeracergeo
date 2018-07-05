@@ -1,13 +1,23 @@
 Module.module({
     name: 'default',
     scripts: [
-        '/playground.js'
+        '/game.state.js',
+        '/playground.js',
+        '/home.js'
     ],
     onInit () {
-        playGroundLoaded ();
         Router.openModule(this.name);
     },
-    view() {
-        return 'vaa';
+    view () {
+        switch (Router.innerRoute()){
+            case 'friend':
+            case 'practice':
+            case 'world':
+                PlayGround.init();
+                return PlayGround.view();
+            case '':
+            default:
+                return Home.view();
+        }
     }
 });
