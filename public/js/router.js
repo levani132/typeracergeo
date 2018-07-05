@@ -1,7 +1,7 @@
 const Router = {
     routes: {
         '' : 'default',
-        'playground' : 'default'
+        'race' : 'default'
     },
     openModule(module){
         if(!Module.checkModule(module)){
