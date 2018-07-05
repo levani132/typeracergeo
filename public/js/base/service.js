@@ -1,15 +1,5 @@
 const Service = {
-    loggedIn: false,
-    loggedInUser: {
-        name: 'guest',
-        lastTenRaces: [],
-        allTimeAvg: 0,
-        bestRace: 0,
-        nRaces: 0,
-        wonRaces: 0,
-        rank: 'ოსტატი',
-        level: 0
-    },
+    domain: '',
     request (url, data, method) {
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
@@ -28,5 +18,17 @@ const Service = {
     },
     post (url, data) {
         return this.request(url, data, 'POST');
+    },
+    GetLoggedInUser () {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            self.get (this.domain + '/GetLoggedInUser').then((loggedInUser) => {
+                User.loggedInUser = loggedInUser;
+                // Temporary
+                User.resetGuestUser();
+                // ---
+                resolve();
+            }).catch(reject);
+        });
     }
 }

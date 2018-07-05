@@ -25,10 +25,7 @@ const Router = {
         if (!Module.checkModule(module)){
             module = Router.routes[module];
         }
-        var header = document.querySelector('header');
-        if(header){
-            header.outerHTML = Header.view();
-        }
+        Header.refresh();
         this.openModule(module);
     },
     idRoute () {

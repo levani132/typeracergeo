@@ -1,6 +1,14 @@
 const Header = {
     name: 'header',
+    refresh () {
+        Service.GetLoggedInUser().then(() => {
+            document.querySelector('header').outerHTML = this.view();
+        });
+    },
     view () {
+        var loggedInUserSpeed = User.loggedInUser.lastTenRaces.length ? 
+                                User.loggedInUser.lastTenRaces.reduce((sum, cur) => sum + cur) / 
+                                User.loggedInUser.lastTenRaces.length : 0;
         return `
             <header class="header">
                 <div class="header-left">
@@ -19,31 +27,30 @@ const Header = {
                     <div class="header-right-wrapper">
                         <div class="right-top user-section">
                             <div class="header-username inline-block">
-                                <span>სტუმარი</span>
+                                <span>${User.loggedInUser.name}</span>
                             </div>
                             <div class="header-user-control inline-block">
-                                <a class="sign-link" href="#">შესვლა</a>
-                                <span class="edit-info"></span>
+                                <a class="sign-link" href="#">${User.loggedIn ? 'გამოსვლა' : 'შესვლა'}</a>
                             </div>
                         </div>
                         <div class="right-bottom user-section">
-                            <a href="#">ოსტატი</a> - 69 <a href="#">ს/წ</a>
+                            <a href="#">${User.loggedInUser.rank}</a> - ${loggedInUserSpeed} <a href="#">ს/წ</a>
                         </div>
                     </div>
                     <div class="user-mini-info">
                         <ul>
                             <li class="user-mini-info-item">
                                 <div class="user-mini-info-text">
-                                    რანკი<span class="value">14</span>
+                                    რანკი<span class="value">${User.loggedInUser.rank}</span>
                                 </div>
                             </li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">წერის დონე<span class="value">14</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">მოგებული რეისები<span class="value">14</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">რეისების რაოდენობა<span class="value">14</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">საუკეთესი რეისი<span class="value">14</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">ბოლო რეისი<span class="value">14</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">ყველა რეისის საშუალო<span class="value">14</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">10 რეისის საშუალო<span class="value">14</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">წერის დონე<span class="value">${User.loggedInUser.level}%</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">მოგებული რეისები<span class="value">${User.loggedInUser.wonRaces}</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">რეისების რაოდენობა<span class="value">${User.loggedInUser.nRaces}</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">საუკეთესი რეისი<span class="value">${User.loggedInUser.bestRace}</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">ბოლო რეისი<span class="value">${User.loggedInUser.lastTenRaces.length ? User.loggedInUser.lastTenRaces[User.loggedInUser.lastTenRaces.length - 1] : 0}</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">ყველა რეისის საშუალო<span class="value">${User.loggedInUser.allTimeAvg}</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">10 რეისის საშუალო<span class="value">${loggedInUserSpeed}</span></div></li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">ბიო</div></li>
                         </ul>
                     </div>
