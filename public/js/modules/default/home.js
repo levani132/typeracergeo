@@ -23,7 +23,7 @@ const Home = {
                 <li class="race-type">
                     <span class="fa fa-3x fa-user race-type-icon"></span>
                     <div class="race-type-body">
-                        <a href="/race/friend">
+                        <a href="/race/practice">
                             <h1 class="race-type-link">ივარჯიშე</h1>
                         </a>
                         <span class="race-type-sub-text">გაიუმჯობესე უნარები მარტომ</span>

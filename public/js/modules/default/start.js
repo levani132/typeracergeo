@@ -3,7 +3,8 @@ Module.module({
     scripts: [
         '/game.state.js',
         '/playground.js',
-        '/home.js'
+        '/home.js',
+        '/game.js'
     ],
     onInit () {
         Router.openModule(this.name);

@@ -6,9 +6,6 @@ const Header = {
         });
     },
     view () {
-        var loggedInUserSpeed = User.loggedInUser.lastTenRaces.length ? 
-                                User.loggedInUser.lastTenRaces.reduce((sum, cur) => sum + cur) / 
-                                User.loggedInUser.lastTenRaces.length : 0;
         return `
             <header class="header">
                 <div class="header-left">
@@ -34,7 +31,7 @@ const Header = {
                             </div>
                         </div>
                         <div class="right-bottom user-section">
-                            <a href="#">${User.loggedInUser.rank}</a> - ${loggedInUserSpeed} <a href="#">ს/წ</a>
+                            <a href="#">${User.loggedInUser.rank}</a> - ${User.loggedInUser.tenAvg} <a href="#">ს/წ</a>
                         </div>
                     </div>
                     <div class="user-mini-info">
@@ -50,7 +47,7 @@ const Header = {
                             <li class="user-mini-info-item"><div class="user-mini-info-text">საუკეთესი რეისი<span class="value">${User.loggedInUser.bestRace}</span></div></li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">ბოლო რეისი<span class="value">${User.loggedInUser.lastTenRaces.length ? User.loggedInUser.lastTenRaces[User.loggedInUser.lastTenRaces.length - 1] : 0}</span></div></li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">ყველა რეისის საშუალო<span class="value">${User.loggedInUser.allTimeAvg}</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">10 რეისის საშუალო<span class="value">${loggedInUserSpeed}</span></div></li>
+                            <li class="user-mini-info-item"><div class="user-mini-info-text">10 რეისის საშუალო<span class="value">${User.loggedInUser.tenAvg}</span></div></li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">ბიო</div></li>
                         </ul>
                     </div>

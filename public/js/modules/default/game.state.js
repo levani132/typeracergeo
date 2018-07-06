@@ -16,12 +16,12 @@ var GameState = (text) => {return {
         var correctNewWord = c == ' ' && correctNewChar;
 
         // Green
-        if(correctNewWord){
+        if(correctNewWord || gameState.position == gameState.text.length - 1 && correctNewChar){
             gameState.green.b = gameState.position + 1;
         }
 
         // Green line
-        if(correctNewWord){
+        if(correctNewWord || gameState.position == gameState.text.length - 1 && correctNewChar){
             gameState.greenLine.a = gameState.position + 1;
             gameState.greenLine.b = gameState.position + 1;
         }else if(correctNewChar){
@@ -83,7 +83,7 @@ var GameState = (text) => {return {
          --><span class="race-text-correct race-text-current">${this.getPart('greenLine')}</span><!--
          --><span class="race-text-incorrect race-text-current">${this.getPart('redLine')}</span><!--
          --><span class="race-text-incorrect">${this.getPart('red')}</span><!--
-         --><span class="race-text-cursor"></span><!--
+         ${this.position != this.text.length ? `--><span class="race-text-cursor"></span><!--` : ''}
          --><span class="race-text-current">${this.getPart('line')}</span><!--
          --><span class="race-text-rest">${this.getPart('rest')}</span>
         `;
