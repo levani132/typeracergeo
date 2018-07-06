@@ -34,6 +34,12 @@ html, body{
     width: 100%;
 }
 
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 :root{
     --light-color: #F5F5F5;
     --compl-color: #bd4802;
@@ -224,7 +230,7 @@ header {
     padding: 20px;
     width: 750px;
     background-color: white;
-    height: 100%;
+    min-height: 100%;
     margin: 0 auto;
     position:relative;
     z-index: 0;
@@ -284,7 +290,7 @@ header {
 
 .race-tracks {
     list-style: none;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .race-track {
@@ -298,7 +304,7 @@ header {
 }
 
 .race-track-right {
-    min-width: 140px;
+    min-width: 110px;
     padding-left: 20px;
 }
 
@@ -347,7 +353,6 @@ header {
 
 .race-text {
     font-size: 20px;
-    padding: 0 20px;
     user-select: none;
 }
 
@@ -388,7 +393,7 @@ header {
 }
 
 .race-input {
-    margin: 10px 20px;
+    margin: 10px 0;
     padding: 0 5px;
     padding-bottom: 5px;
     font-size: 25px;
@@ -480,4 +485,40 @@ header {
 
 .race-link.next{
     float: right;
+}
+
+.text-review-state {
+    color: var(--compl-color);
+    font-weight: bold;
+    display: block;
+    margin: 10px 0;
+}
+
+.text-review-left {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 5px;
+}
+
+.text-review-header {
+    font-size: 20px;
+}
+
+.text-review-picture {
+    max-width: 100px;
+    max-height: 200px;
+}
+
+.text-review-author {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.text-review-stat {
+    margin: 2px 0;
+}
+
+.text-review-stat-name {
+    display: inline-block;
+    min-width: 120px;
 }

@@ -36,10 +36,28 @@ const Service = {
         return new Promise((resolve, reject) => {
             self.get (this.domain + '/GetRandomText').then((text) => {
                 // Temporary
-                text =  `This is some English text to test my writing skills. Let's make it bigger to test my skills better.`;
+                text = {
+                    id: 0,
+                    text: `This is some English text to test my writing skills. Let's make it bigger to test my skills better.`,
+                    type: "ტექსტი", // Song, book or smthng
+                    name: "მაგალითი", // Song, book or smthng name
+                    author: "ლევან ბეროშვილი", // Song, book or smthng author
+                    picUrl: "https://picsum.photos/200/300" // Song, book or smthng picture
+                };
                 // ---
                 resolve(text);
             }).catch(reject);
-        })
+        });
+    },
+    GetRandomGame () {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            self.get (this.domain + '/GetRandomGame').then((game) => {
+                // Temporary
+                game = new Game();
+                // ---
+                resolve(game);
+            }).catch(reject);
+        });
     }
 }
