@@ -8,8 +8,8 @@ const Ranks = {
 };
 
 function getRank(points){
-    for(var i = 0; i < Ranks.length; i++){
-        if(Ranks[Object.keys(Ranks)[i]][0] <= points && Ranks[Object.keys(Ranks)[i]][1] >= points){
+    for(var i = 0; i < Object.keys(Ranks).length; i++){
+        if(Ranks[Object.keys(Ranks)[i]][0] <= points && points <= Ranks[Object.keys(Ranks)[i]][1]){
             return Object.keys(Ranks)[i];
         }
     }

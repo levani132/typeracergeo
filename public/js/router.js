@@ -37,12 +37,13 @@ const Router = {
     route () {
         return window.location.pathname.split('/')[1] || '';
     },
+    fullRoute () {
+        return window.location.pathname;
+    },
     loadMe (component) {
         this.components.push(component);
     }
 }
-
-Router.routeResolver();
 
 document.body.onclick = e => {
     e = e || event;

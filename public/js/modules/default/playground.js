@@ -2,13 +2,16 @@ var PlayGround = {
     init () {
         this.game = new Game();
         this.states = [GameState(this.game.text)];
+        this.finishedCount = 0;
+        this.isOffline = false;
+        this.counterInterval = null;
 
         if (Router.innerRoute() == 'world') {
 
         } else if (Router.innerRoute() == 'friend') {
 
         } else if (Router.innerRoute() == 'practice') {
-            isOffline = true;
+            this.isOffline = true;
             var self = this;
             Service.GetRandomText().then(text => {
                 self.game.text = text;
@@ -25,17 +28,19 @@ var PlayGround = {
     states: [],
     game: null,
     isOffline: false,
+    counterInterval: null,
     onLoad () {
-        PlayGround.raceInput = document.querySelector('.race-input');
-        PlayGround.raceInput.oninput = PlayGround.input;
+        if (Router.innerRoute() != '')  {
+            PlayGround.raceInput = document.querySelector('.race-input');
+            PlayGround.raceInput.oninput = PlayGround.input;
+        }
     },
     startStartingCountdown () {
         var self = this;
         var countDown = setInterval(() => {
             self.game.waitingTime--;
             document.querySelector('.race-counter').outerHTML = self.counterView();
-            if(self.game.waitingTime == 0){
-                document.querySelector('.race-counter').outerHTML = self.counterView();
+            if (self.game.waitingTime == 0) {
                 clearInterval(countDown);
                 self.startGame();
             }
@@ -50,15 +55,17 @@ var PlayGround = {
         PlayGround.raceInput.removeAttribute('placeholder');
         PlayGround.raceInput.focus();
         var self = this;
-        var countDown = setInterval(() => {
-            self.game.textTime--;
+        this.counterInterval = setInterval(() => {
             self.game.timePassed++;
-            document.querySelector('.text-counter').outerHTML = self.textCounterView();
-            if(self.game.textTime == 0){
-                document.querySelector('.text-counter').classList.add('hidden');
-                clearInterval(countDown);
+            if(self.game.timePassed % 60 == 0){
+                self.game.textTime--;
+                document.querySelector('.text-counter').outerHTML = self.textCounterView();
+                if(self.game.textTime == 0){
+                    document.querySelector('.text-counter').classList.add('hidden');
+                    clearInterval(self.counterInterval);
+                }
             }
-        }, 1000);
+        }, 16.66);
     },
     input () {
         if(PlayGround.raceInput.value.length < PlayGround.states[PlayGround.states.length - 1].lastInput.length){
@@ -90,6 +97,7 @@ var PlayGround = {
             }
             User.addStatistics(PlayGround.game.playerFind(User.loggedInUser.id));
             document.querySelector('.race-section').outerHTML = PlayGround.view();
+            clearInterval(PlayGround.counterInterval);
         }else{
 
         }
@@ -99,18 +107,19 @@ var PlayGround = {
         return `
             <div class="race-counter ${this.game.progress < STARTED_GAME ? '' : 'hidden'}">
                 <div class="race-counter-left">
-                    <div class="race-counter-ball ${this.game.waitingTime > 5 ? 'red' : ''}">
-                    </div><div class="race-counter-ball ${this.game.waitingTime <= 5 && this.game.waitingTime > 0 ? 'yellow' : ''}">
-                    </div><div class="race-counter-ball ${this.game.waitingTime == 0 ? 'green' : ''}"></div>
+                    <div class="race-counter-ball ${this.game.waitingTime > 5 || this.game.progress < STARTED_NEW_GAME ? 'red' : ''}">
+                    </div><div class="race-counter-ball ${this.game.waitingTime <= 5 && this.game.waitingTime > 1 && this.game.progress == STARTED_NEW_GAME ? 'yellow' : ''}">
+                    </div><div class="race-counter-ball ${this.game.waitingTime == 1 ? 'green' : ''}"></div>
                 </div><div class="race-counter-right">
                     <span class="race-counter-text">
                         ${
+                            this.game.progress < STARTED_NEW_GAME ? 'დაელოდე მოწინააღმდეგეებს' :
                             this.game.waitingTime > 5 ? 'მოემზადე' :
-                            this.game.waitingTime != 0 ? 'ბოლო წამები...' :
+                            this.game.waitingTime != 1 ? 'ბოლო წამები...' :
                             'დაიწყე'
                         }
                     </span>
-                    <span class="race-counter-count">:${this.game.waitingTime}წმ</span>
+                    <span class="race-counter-count" ${this.game.progress == STARTED_NEW_GAME ? '' : 'hidden'}>:${this.game.waitingTime}წმ</span>
                 </div>
             </div>
         `;
@@ -138,11 +147,15 @@ var PlayGround = {
                 <ul class="race-tracks">
                     ${this.game.players.map(player => player.view()).join('')}
                 </ul>
-                <div class="race-text">
-                    ${this.states[this.states.length - 1].text}
+                <div class="race-text" ${this.game.progress < ENDED_FOR_ME ? "" : "hidden"}>
+                    ${this.game.progress < ENDED_FOR_ME ? this.states[this.states.length - 1].text : ""}
                 </div>
                 <input type="text" class="race-input" ${this.game.progress == STARTED_GAME ? '' : (this.game.progress > STARTED_GAME ? "hidden" : "disabled")} 
                                                         ${this.game.progress < STARTED_GAME ? 'placeholder="შეიყვანეთ მოცემული ტექსტი აქ, როცა რბოლა დაიწყება"' : ""}>
+                <div class="race-footer">
+                    <a href="/race" class="race-link leave">რბოლიდან გასვლა</a>
+                    <a href="${Router.fullRoute()}" class="race-link next" ${this.game.progress == ENDED_GAME ? "" : "hidden"}>შემდეგი რბოლა</a>
+                </div>
             </div class="race-section">
         `;
     }

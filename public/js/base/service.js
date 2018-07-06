@@ -36,10 +36,7 @@ const Service = {
         return new Promise((resolve, reject) => {
             self.get (this.domain + '/GetRandomText').then((text) => {
                 // Temporary
-                text =  `დაჯდა წერად ანდერძისა, საბრალოსა საუბრისად: ` + 
-                        `"ჰე მეფეო, გავიპარე ძებნად ჩემგან საძებრისად! ` +
-                        `ვერ დავდგები შეუყრელად ჩემთა ცეცხლთა მომდებრისად; ` +
-                        `შემინდევ და წამატანე მოწყალება ღმრთეებრისად.`;
+                text =  `This is some English text to test my writing skills. Let's make it bigger to test my skills better.`;
                 // ---
                 resolve(text);
             }).catch(reject);

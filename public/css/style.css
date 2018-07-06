@@ -97,12 +97,12 @@ header {
     padding-left: 60px;
 }
 
-.header-right a {
+.header-right a, .race-section a {
     color: var(--dark-color);
     opacity: 1;
 }
 
-.header-right a:hover {
+.header-right a:hover, .race-section a:hover {
     opacity: 0.8;
 }
 
@@ -472,4 +472,12 @@ header {
 
 .text-counter.hidden{
     display:none;
+}
+
+.race-link.leave{
+    float: left;
+}
+
+.race-link.next{
+    float: right;
 }

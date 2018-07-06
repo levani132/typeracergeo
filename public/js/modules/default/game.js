@@ -6,15 +6,15 @@ const ZERO_GAME = 0,
         ENDED_GAME = 5;
 
 class Player {
-    constructor (name, place, speed, progress, isMe, id) {
+    constructor (name, place, speed, progress, isMe, id, nWords, errorCount) {
         this.name = name;
         this.place = place;
         this.speed = speed;
         this.progress = progress;
         this.isMe = isMe;
         this.id = id;
-        this.nWords = 0;
-        this.errorCount = 0;
+        this.nWords = nWords;
+        this.errorCount = errorCount;
     }
     view () {
         return `
@@ -27,7 +27,7 @@ class Player {
                     <div class="race-track-path"></div>
                 </div>
                 <div class="race-track-right">
-                    <div class="race-track-place">${this.progress == 100 ? this.placeString() + " ადგილი" : ""}</div>
+                    <div class="race-track-place">${this.progress == 100 ? PlayGround.isOffline ? "ფინიში" : this.placeString() + " ადგილი" : ""}</div>
                     <div class="race-track-speed">${this.speed} ს/წმ</div>
                 </div>
             </li>
@@ -42,8 +42,8 @@ class Game {
     constructor () {
         this.progress = ZERO_GAME;
         this.text = "";
-        this.players = [new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id)];
-        this.waitingTime = 0;
+        this.players = [new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0)];
+        this.waitingTime = 10;
         this.textTime = 0;
         this.timePassed = 0;
     }
@@ -61,7 +61,7 @@ class Game {
         this.players.forEach(player => {
             if(player.id == userId){
                 player.nWords++;
-                player.speed = Math.round(player.nWords / self.timePassed * 60);
+                player.speed = Math.round(player.nWords / self.timePassed * 3600);
                 player.progress = progress * 100;
                 document.querySelector(`#id-${userId}`).outerHTML = player.view();
             }
