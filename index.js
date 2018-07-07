@@ -87,7 +87,10 @@ app.get('/GetRandomText', (req, res) => {
 app.get('/addd', (req, res) => {
     var text = new Text({
         guid: guid(),
-        text:   `ვიცი, ბოლოდ`,
+        text:   `ვიცი, ბოლოდ არ დამიგმობ ამა ჩემსა განზრახულსა. `+
+                `კაცი ბრძენი ვერ გასწირავს მოყვარესა მოყვარულსა; `+
+                `მე სიტყვასა ერთსა გკადრებ, პლატონისგან სწავლა-თქმულსა: `+
+                `"სიცრუე და ორპირობა ავნებს ხორცსა, მერმე სულსა".`,
         type: "ტექსტი", // Song, book or smthng
         name: "ვეფხისტყაოსანი", // Song, book or smthng name
         author: "შოთა რუსთაველი", // Song, book or smthng author
