@@ -8,10 +8,15 @@ var PlayGround = {
 
         if (Router.innerRoute() == 'world') {
             var self = this;
-            Service.GetRandomGame().then(game => {
+            Service.GetRandomGame(new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0)).then(game => {
                 self.game = Game.copy(game);
+                self.states = [GameState(self.game.text.text)];
                 document.querySelector('.race-section').outerHTML = self.view();
-                self.startStartingCountdown();
+                self.game.textTime = self.game.text.text.split(' ').length * 6
+                self.mainLoop ();
+                if (self.game.progress == STARTED_NEW_GAME) {
+                    self.startStartingCountdown();
+                }
             });
         } else if (Router.innerRoute() == 'friend') {
         } else if (Router.innerRoute() == 'practice') {
@@ -33,6 +38,7 @@ var PlayGround = {
     game: null,
     isOffline: false,
     counterInterval: null,
+    mainInterval: null,
     onLoad () {
         if (Router.innerRoute() != '')  {
             PlayGround.raceInput = document.querySelector('.race-input');
@@ -50,6 +56,26 @@ var PlayGround = {
             }
         }, 1000);
     },
+    mainLoop () {
+        var self = this;
+        this.mainInterval = setInterval(() => {
+            Service.UpdateInfo(self.game).then(game => {
+                self.game.players = game.players.map(player => Player.copy(player));
+                self.game.players.forEach(player => {
+                    player.isMe = false;
+                    if(player.id == User.loggedInUser.id){
+                        player.isMe = true;
+                    }
+                })
+                document.querySelector('.race-tracks').innerHTML = self.game.players.map(player => player.view()).join('');
+                if(self.game.progress != game.progress){
+                    if(game.progress == STARTED_NEW_GAME)
+                        self.startStartingCountdown();
+                    self.game.progress = game.progress;
+                }
+            });
+        }, 1000);
+    },
     startGame () {
         PlayGround.game.progress = STARTED_GAME;
         document.querySelector('.race-section').outerHTML = this.view();
@@ -59,12 +85,16 @@ var PlayGround = {
         PlayGround.raceInput.removeAttribute('placeholder');
         PlayGround.raceInput.focus();
         var self = this;
+        if(this.counterInterval != null){
+            clearInterval(this.counterInterval);
+        }
         this.counterInterval = setInterval(() => {
             self.game.timePassed++;
             if(self.game.timePassed % 60 == 0){
                 self.game.textTime--;
                 document.querySelector('.text-counter').outerHTML = self.textCounterView();
-                if(self.game.textTime == 0){
+                if(self.game.textTime <= 0){
+                    console.log(self.game.timePassed);
                     document.querySelector('.text-counter').classList.add('hidden');
                     clearInterval(self.counterInterval);
                 }
