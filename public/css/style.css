@@ -34,6 +34,10 @@ html, body{
     width: 100%;
 }
 
+.hidden {
+    display: none;
+}
+
 .clearfix::after {
     content: "";
     display: table;
@@ -225,6 +229,9 @@ header {
     display: inline-block;
 }
 
+main {
+    height: 100%;
+}
 
 .main {
     padding: 20px;
@@ -522,3 +529,92 @@ header {
     display: inline-block;
     min-width: 120px;
 }
+
+.login-background-right{
+    width: 100%;
+    position: relative;
+    height: 100%;
+    transform: skew(-33deg);
+    background-color: var( --dark-color);
+    left: 45%;
+}
+
+.login-background-right>* {
+    transform: skew(33deg); 
+}
+
+.login-input {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 270px;
+    height: 40px;
+    background-color: white;
+    border : none;
+    outline: none;
+    font-family:  'bpg nino';
+    font-size: 16px;
+    padding: 0 10px;
+    margin-bottom: 15px;
+}
+
+.login-logo img{
+    width:270px;
+}
+
+.login-input-wrapper{
+    position: relative;
+    top: 20%;
+    transform: skew(33deg);
+    display: inline-block;
+    width: 270px;
+}
+
+.login-left{
+    display: inline-block;
+    float: left;
+}
+
+
+
+.login-input-header{
+    text-align: center;
+    padding: 0 5px;
+    height: 30px;
+    font-size: 20px;
+    color: white;
+}
+
+.login-button{
+    transition: background-color 0.5s ease;    
+    background: var(--lighter-color) ;
+    color : white;
+    text-align: center;
+    line-height: 40px;
+}
+
+.login-button:hover{
+    background: var(--darker-color) ;
+}
+
+.login-left{
+    position: relative;
+    top: 20vh;
+    transform: translateX(90%);
+}
+
+.login-register-button-wrapper{
+    font-size: 14px;
+    text-align: right;
+    width: 270px;
+    color: white;
+}
+
+.login-register-button{
+    display: inline;
+}
+
+.login-register-button:hover{
+    text-decoration: underline;
+}
+
+

@@ -3,7 +3,8 @@ const Module = {
     modules: {
         "default": false,
         "about": false,
-        "texts": false
+        "texts": false,
+        "login": false,
     },
     loadedModules: {},
     loaded: false,

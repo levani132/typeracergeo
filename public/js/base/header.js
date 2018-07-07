@@ -1,16 +1,25 @@
 const Header = {
     name: 'header',
+    disabled: false,
     refresh () {
         Service.GetLoggedInUser().then(() => {
             document.querySelector('header').outerHTML = this.view();
         });
     },
+    disable(){
+        this.disabled = true;
+        this.refresh();
+    },
+    enable () {
+        this.disbaled = false;
+        this.refresh();
+    },
     view () {
         return `
-            <header class="header">
+            <header class="header${this.disabled ? ` hidden` : ``}">
                 <div class="header-left">
                     <div class="header-logo inline-block">
-                        <img src="/public/img/logo.png" alt="მწერალი">
+                       <a href="/race" ${Router.route() == 'race' ? `class="active"` : ``}><img src="/public/img/mainLogo.png" alt="მწერალი"></a>
                     </div>
                     <ul class="navigation inline-block">
                         <li class="nav-item inline-block"><a href="/race" ${Router.route() == 'race' ? `class="active"` : ``}>რბოლა</a>
@@ -27,7 +36,7 @@ const Header = {
                                 <span>${User.loggedInUser.name}</span>
                             </div>
                             <div class="header-user-control inline-block">
-                                <a class="sign-link" href="#">${User.loggedIn ? 'გამოსვლა' : 'შესვლა'}</a>
+                                <a class="sign-link" href="/login">${User.loggedIn ? 'გამოსვლა' : 'შესვლა'}</a>
                             </div>
                         </div>
                         <div class="right-bottom user-section">
