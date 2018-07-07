@@ -18,8 +18,8 @@ const ZERO_GAME = 0,
         ENDED_FOR_ME = 4, 
         ENDED_GAME = 5
 
-// mongoose.connect('mongodb://typeracergeo:typeracergeo321@ds129321.mlab.com:29321/typeracergeo')
-mongoose.connect('mongodb://127.0.0.1:27017/')
+mongoose.connect('mongodb://typeracergeo:typeracergeo321@ds129321.mlab.com:29321/typeracergeo')
+// mongoose.connect('mongodb://127.0.0.1:27017/')
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
