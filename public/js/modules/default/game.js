@@ -48,8 +48,10 @@ class Player {
         
 class Game {
     constructor () {
+        this.id = '';
         this.progress = ZERO_GAME;
         this.text = {
+            id: "",
             text: "",
             type: "", // Song, book or smthng
             name: "", // Song, book or smthng name
@@ -64,6 +66,7 @@ class Game {
 
     static copy (game) {
         var newGame = new Game();
+        newGame.id = game.id;
         newGame.progress = game.progress;
         newGame.text = game.text;
         newGame.players = game.players.map(player => Player.copy(player));

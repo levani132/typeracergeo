@@ -5,12 +5,13 @@ const Service = {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() { 
                 if (xhr.readyState == 4 && xhr.status == 200)
-                    resolve(xhr.responseText);
+                    resolve(xhr.responseText[0] == '{' ? JSON.parse(xhr.responseText) : xhr.responseText);
                 else if (xhr.readyState == 4 && xhr.status != 200)
                     reject(xhr.response);
             }
-            xhr.open(method, url, true); // true for asynchronous 
-            xhr.send(data);
+            xhr.open(method, url, true); // true for asynchronous
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8"); 
+            xhr.send(JSON.stringify(data));
         });
     },
     get (url, data) {
@@ -49,15 +50,15 @@ const Service = {
             }).catch(reject);
         });
     },
-    GetRandomGame () {
+    GetRandomGame (player) {
         var self = this;
         return new Promise((resolve, reject) => {
-            self.get (this.domain + '/GetRandomGame').then((game) => {
-                // Temporary
-                game = new Game();
-                // ---
+            self.post (this.domain + '/GetRandomGame', player).then((game) => {
                 resolve(game);
             }).catch(reject);
         });
+    },
+    UpdateInfo (game) {
+        return this.post (this.domain + '/UpdateInfo', game);
     }
 }
