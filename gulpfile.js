@@ -20,9 +20,19 @@ gulp.task('js', function(){
     .pipe(gulp.dest('build/public/js'))
 });
 
+gulp.task('img', function(){
+  return gulp.src('public/img/**/*.*')
+    .pipe(gulp.dest('build/public/img'))
+});
+
+gulp.task('fonts', function(){
+  return gulp.src('public/fonts/**/*.*')
+    .pipe(gulp.dest('build/public/fonts'))
+});
+
 gulp.task('clean', function(){
   return gulp.src('build')
     .pipe(clean())
 });
 
-gulp.task('default', [ 'html', 'css', 'js' ]);
+gulp.task('default', [ 'html', 'css', 'js', 'fonts', 'img' ]);

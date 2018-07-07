@@ -62,6 +62,7 @@ class Game {
         this.waitingTime = 10;
         this.textTime = 0;
         this.timePassed = 0;
+        this.finishedCount = 0;
     }
 
     static copy (game) {
@@ -73,6 +74,7 @@ class Game {
         newGame.waitingTime = game.waitingTime;
         newGame.textTime = game.textTime;
         newGame.timePassed = game.timePassed;
+        newGame.finishedCount = game.finishedCount;
         return newGame;
     }
 

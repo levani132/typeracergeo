@@ -36,6 +36,7 @@ class Game  {
         this.waitingTime = 10
         this.textTime = 0
         this.timePassed = 0
+        this.finishedCount = 0
     }
 }
 

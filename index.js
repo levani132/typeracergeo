@@ -6,7 +6,7 @@ const Text = require('./text')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
-app.use('/public', express.static('public'))
+app.use('/public', express.static('build/public'))
 app.use('/public', express.static('node_modules'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -18,8 +18,8 @@ const ZERO_GAME = 0,
         ENDED_FOR_ME = 4, 
         ENDED_GAME = 5
 
-mongoose.connect('mongodb://typeracergeo:typeracergeo321@ds129321.mlab.com:29321/typeracergeo')
-// mongoose.connect('mongodb://127.0.0.1:27017/')
+//mongoose.connect('mongodb://sa:abcdef1@ds129321.mlab.com:29321/typeracergeo')
+mongoose.connect('mongodb://127.0.0.1:27017/')
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -56,6 +56,7 @@ app.post('/UpdateInfo', (req, res) => {
     var myGame = req.body;
     var serverGame = games.games[myGame.id];
     serverGame.timePassed = myGame.timePassed;
+    serverGame.finishedCount = Math.max(myGame.finishedCount, serverGame.finishedCount);
     if(myGame.waitingTime < serverGame.waitingTime){
         if(myGame.waitingTime == 0){
             serverGame.waitingTime = 0;
@@ -77,13 +78,16 @@ app.post('/UpdateInfo', (req, res) => {
     res.send(serverGame);
 })
 
+app.get('/GetRandomText', (req, res) => {
+    Text.findRandom().then(text => {
+        res.send(text);
+    })
+})
+
 app.get('/addd', (req, res) => {
     var text = new Text({
         guid: guid(),
-        text:   `ვიცი, ბოლოდ არ დამიგმობ ამა ჩემსა განზრახულსა. `+
-                `კაცი ბრძენი ვერ გასწირავს მოყვარესა მოყვარულსა; `+
-                `მე სიტყვასა ერთსა გკადრებ, პლატონისგან სწავლა-თქმულსა: `+
-                `"სიცრუე და ორპირობა ავნებს ხორცსა, მერმე სულსა".`,
+        text:   `ვიცი, ბოლოდ`,
         type: "ტექსტი", // Song, book or smthng
         name: "ვეფხისტყაოსანი", // Song, book or smthng name
         author: "შოთა რუსთაველი", // Song, book or smthng author

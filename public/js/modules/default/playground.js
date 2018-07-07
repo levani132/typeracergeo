@@ -11,8 +11,8 @@ var PlayGround = {
             Service.GetRandomGame(new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0)).then(game => {
                 self.game = Game.copy(game);
                 self.states = [GameState(self.game.text.text)];
+                self.game.textTime = self.game.text.text.split(' ').length * 6;
                 document.querySelector('.race-section').outerHTML = self.view();
-                self.game.textTime = self.game.text.text.split(' ').length * 6
                 self.mainLoop ();
                 if (self.game.progress == STARTED_NEW_GAME) {
                     self.startStartingCountdown();
@@ -72,6 +72,7 @@ var PlayGround = {
                     if(game.progress == STARTED_NEW_GAME)
                         self.startStartingCountdown();
                     self.game.progress = game.progress;
+                    self.game.finishedCount = Math.max(game.finishedCount, self.game.finishedCount);
                 }
             });
         }, 1000);
@@ -123,8 +124,8 @@ var PlayGround = {
             PlayGround.raceInput.value = "";
             PlayGround.game.playerProgress(User.loggedInUser.id, 
                 PlayGround.states[PlayGround.states.length - 1].position / PlayGround.states[PlayGround.states.length - 1].text.length);
-            PlayGround.game.playerPlace(User.loggedInUser.id, ++PlayGround.finishedCount);
-            if (PlayGround.finishedCount == PlayGround.game.players.length) {
+            PlayGround.game.playerPlace(User.loggedInUser.id, ++PlayGround.game.finishedCount);
+            if (PlayGround.game.finishedCount == PlayGround.game.players.length) {
                 PlayGround.game.progress = ENDED_GAME;
                 clearInterval(PlayGround.counterInterval);
             } else {
@@ -206,7 +207,7 @@ var PlayGround = {
                         (this.game.progress < STARTED_NEW_GAME ? 'დაელოდეთ ოპონენტებს...' :
                         (this.game.progress == STARTED_NEW_GAME ? 'რბოლა მალე დაიწყება!' :
                         (this.game.progress == STARTED_GAME ? 'წერე!' : 
-                        (this.game.progress == ENDED_FOR_ME ? `თქვენ გახვედით ${this.game.players[0].placeString()} ადგილზე.` : 
+                        (this.game.progress == ENDED_FOR_ME ? `თქვენ დაიკავეთ ${this.game.players[0].placeString()} ადგილი.` : 
                         ('რბოლა დასრულდა.')))))
                     }
                 </h1>
@@ -221,7 +222,7 @@ var PlayGround = {
                                                         ${this.game.progress < STARTED_GAME ? 'placeholder="შეიყვანეთ მოცემული ტექსტი აქ, როცა რბოლა დაიწყება"' : ""}>
                 <div class="race-footer clearfix">
                     <a href="/race" class="race-link leave">რბოლიდან გასვლა</a>
-                    <a href="${Router.fullRoute()}" class="race-link next" ${this.game.progress == ENDED_GAME ? "" : "hidden"}>შემდეგი რბოლა</a>
+                    <a href="${Router.fullRoute()}" class="race-link next" ${this.game.progress >= ENDED_FOR_ME ? "" : "hidden"}>შემდეგი რბოლა</a>
                 </div>
                 ${this.game.progress >= ENDED_FOR_ME ? this.aboutTextView() : ""}
             </div class="race-section">
