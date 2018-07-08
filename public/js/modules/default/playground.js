@@ -10,6 +10,12 @@ var PlayGround = {
             var self = this;
             Service.GetRandomGame(new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0)).then(game => {
                 self.game = Game.copy(game);
+                self.game.players.forEach(player => {
+                    player.isMe = false;
+                    if(player.id == User.loggedInUser.id){
+                        player.isMe = true;
+                    }
+                })
                 self.states = [GameState(self.game.text.text)];
                 self.game.textTime = self.game.text.text.split(' ').length * 6;
                 document.querySelector('.race-section').outerHTML = self.view();
@@ -71,6 +77,10 @@ var PlayGround = {
                 if(self.game.progress != game.progress){
                     if(game.progress == STARTED_NEW_GAME)
                         self.startStartingCountdown();
+                    if(game.progress == ENDED_GAME){
+                        clearInterval(self.mainInterval);
+                        document.querySelector('.race-section').outerHTML = self.view();
+                    }
                     self.game.progress = game.progress;
                     self.game.finishedCount = Math.max(game.finishedCount, self.game.finishedCount);
                 }
@@ -128,6 +138,7 @@ var PlayGround = {
             if (PlayGround.game.finishedCount == PlayGround.game.players.length) {
                 PlayGround.game.progress = ENDED_GAME;
                 clearInterval(PlayGround.counterInterval);
+                clearInterval(PlayGround.mainInterval);
             } else {
                 PlayGround.game.progress = ENDED_FOR_ME;
             }

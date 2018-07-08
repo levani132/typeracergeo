@@ -4,9 +4,10 @@ const mongoose = require('mongoose')
 const {Game, Games, Player, guid} = require('./game')
 const Text = require('./text')
 const bodyParser = require('body-parser')
-const jsonParser = bodyParser.json()
 
-app.use('/public', express.static('build/public'))
+const public = 'build/public';
+
+app.use('/public', express.static(public))
 app.use('/public', express.static('node_modules'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -55,11 +56,14 @@ app.post('/GetRandomGame', (req, res) => {
 app.post('/UpdateInfo', (req, res) => {
     var myGame = req.body;
     var serverGame = games.games[myGame.id];
+    if(!serverGame){
+        res.send('error');
+        return;
+    }
     serverGame.timePassed = myGame.timePassed;
     serverGame.finishedCount = Math.max(myGame.finishedCount, serverGame.finishedCount);
     if(myGame.waitingTime < serverGame.waitingTime){
-        if(myGame.waitingTime == 0){
-            serverGame.waitingTime = 0;
+        if(myGame.waitingTime <= 0){
             serverGame.progress = STARTED_GAME;
         }
         serverGame.waitingTime = myGame.waitingTime;
@@ -85,7 +89,7 @@ app.get('/GetRandomText', (req, res) => {
 })
 
 app.get('/addd', (req, res) => {
-    var text = new Text({
+    var text = new Text(req.body || {
         guid: guid(),
         text:   `ვიცი, ბოლოდ არ დამიგმობ ამა ჩემსა განზრახულსა. `+
                 `კაცი ბრძენი ვერ გასწირავს მოყვარესა მოყვარულსა; `+
@@ -96,10 +100,9 @@ app.get('/addd', (req, res) => {
         author: "შოთა რუსთაველი", // Song, book or smthng author
         picUrl: "https://picsum.photos/200/300" // Song, book or smthng picture
     })
-    console.log(text)
     text.save()
 })
 
-app.get('/*', (req, res) => res.sendFile(__dirname + '/public/indexNew.html'))
+app.get('/*', (req, res) => res.sendFile(__dirname + '/' + public + '/index.html'))
 
 app.listen(process.env.PORT || 3000, () => console.log('App listening on port 3000!'))

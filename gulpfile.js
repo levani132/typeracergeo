@@ -3,6 +3,7 @@ var uglify = require('gulp-uglify-es').default;
 var minifyCSS = require('gulp-csso');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
+var sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('html', function(){
   return gulp.src('public/**/*.html')
@@ -16,17 +17,21 @@ gulp.task('css', function(){
 });
 
 gulp.task('js', function(){
-  return gulp.src('public/js/**/*.js')
+  return gulp.src(['public/js/**/*.js', '!public/js/base/**/*.js', '!public/js/*.js'])
+    .pipe(sourcemaps.init())
     .pipe(uglify())
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build/public/js'))
 });
 
 gulp.task('core', function(){
   return gulp.src('public/js/*.js')
+    .pipe(sourcemaps.init())
     .pipe(uglify())
     .pipe(concat('core.js'))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build/public/js'))
-})
+});
 
 gulp.task('base', function(){
   return gulp.src([
@@ -37,10 +42,17 @@ gulp.task('base', function(){
     'public/js/base/user.js',
     'public/js/base/site.js'
   ])
+    .pipe(sourcemaps.init())
     .pipe(uglify())
     .pipe(concat('base.js'))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build/public/js'))
-})
+});
+
+gulp.task('clean map', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base' ], function(){
+  return gulp.src('build/public/**/*.js.map')
+    .pipe(clean())
+});
 
 gulp.task('img', function(){
   return gulp.src('public/img/**/*.*')
@@ -57,4 +69,5 @@ gulp.task('clean', function(){
     .pipe(clean())
 });
 
-gulp.task('default', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base' ]);
+gulp.task('default', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base', 'clean map' ]);
+gulp.task('debug', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base' ]);
