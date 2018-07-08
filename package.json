@@ -8,9 +8,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "font-awesome": "^4.7.0",
-    "mongoose": "^5.2.1"
-  },
-  "devDependencies": {
+    "mongoose": "^5.2.1",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
@@ -19,8 +17,11 @@
     "gulp-uglify-es": "^1.0.4",
     "nodemon": "^1.17.5"
   },
+  "devDependencies": {
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
