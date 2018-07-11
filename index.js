@@ -57,7 +57,7 @@ app.post('/UpdateInfo', (req, res) => {
     var myGame = req.body;
     var serverGame = games.games[myGame.id];
     if(!serverGame){
-        res.status(505);
+        //res.status(505);
         res.send('error');
         return;
     }
