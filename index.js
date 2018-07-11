@@ -12,11 +12,9 @@ app.use('/public', express.static('node_modules'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const ZERO_GAME = 0, 
-        NEW_GAME = 1, 
+const NEW_GAME = 1, 
         STARTED_NEW_GAME = 2, 
         STARTED_GAME = 3, 
-        ENDED_FOR_ME = 4, 
         ENDED_GAME = 5
 
 mongoose.connect('mongodb://sa:123456qwerty@ds129321.mlab.com:29321/typeracergeo')
@@ -31,10 +29,6 @@ var games = new Games()
 
 var friendGames = new Games()
 
-app.get('/userInfo/:id', (req, res) => {
-
-})
-
 app.post('/GetRandomGame', (req, res) => {
     var game = games.getLastOpenGame()
     if(!game){
@@ -42,42 +36,73 @@ app.post('/GetRandomGame', (req, res) => {
         game.players.push(req.body)
         Text.findRandom().then(text => {
             game.text = text
+            game.textTime = text.text.split(' ').length * 6
+            game.progress = NEW_GAME
             res.send(game)
         })
     }else{
         game.players.push(req.body)
         if (game.players.length == 2){
-            game.progress = STARTED_NEW_GAME;
+            startNewGame(game)
         }
         res.send(game)
     }
 })
 
+function startGame(game){
+    game.progress = STARTED_GAME
+    var interval = setInterval(() => {
+        game.timePassed += 3;
+        if (game.timePassed % 60 == 0) {
+            game.textTime--;
+            if(game.textTime <= 0 || Object.keys(game.finished).length == game.players.length){
+                game.progress = ENDED_GAME
+                clearInterval(interval);
+            }
+        }
+    }, 50)
+}
+
+function startNewGame(game){
+    game.progress = STARTED_NEW_GAME
+    var interval = setInterval(() => {
+        game.waitingTime--;
+        if (game.waitingTime <= 0) {
+            clearInterval(interval);
+            startGame(game);
+        }
+    }, 1000)
+}
+
+app.post('/GetPracticeGame', (req, res) => {
+    game = games.getNewGame()
+    game.players.push(req.body)
+    game.waitingTime = 5
+    game.progress = STARTED_NEW_GAME
+    Text.findRandom().then(text => {
+        game.text = text
+        game.textTime = text.text.split(' ').length * 6
+        startNewGame(game)
+        res.send(game)
+    })
+})
+
 app.post('/UpdateInfo', (req, res) => {
-    var myGame = req.body;
-    var serverGame = games.games[myGame.id];
+    var {gameId, player} = req.body;
+    var serverGame = games.games[gameId];
     if(!serverGame){
-        //res.status(505);
+        res.status(500);
         res.send('error');
         return;
     }
-    serverGame.timePassed = myGame.timePassed;
-    serverGame.finishedCount = Math.max(myGame.finishedCount, serverGame.finishedCount);
-    if(myGame.waitingTime < serverGame.waitingTime){
-        if(myGame.waitingTime <= 0){
-            serverGame.progress = STARTED_GAME;
-        }
-        serverGame.waitingTime = myGame.waitingTime;
+    if(player.progress == 100 && !serverGame.finished[player.id]){
+        serverGame.finished[player.id] = true;
     }
-    myGame.players.forEach(player => {
-        if(player.isMe){
-            serverGame.players.forEach(serverPlayer => {
-                if(serverPlayer.id == player.id){
-                    Object.keys(serverPlayer).forEach(key => {
-                        serverPlayer[key] = player[key];
-                    })
-                }
-            });
+    serverGame.players.forEach(serverPlayer => {
+        if(serverPlayer.id == player.id){
+            Object.keys(serverPlayer).forEach(key => {
+                serverPlayer[key] = player[key];
+            })
         }
     });
     res.send(serverGame);
@@ -90,16 +115,13 @@ app.get('/GetRandomText', (req, res) => {
 })
 
 app.get('/addd', (req, res) => {
-    var text = new Text(req.body || {
+    var text = new Text(Object.keys(req.body).length != 0 ? req.body : {
         guid: guid(),
-        text:   `ვიცი, ბოლოდ არ დამიგმობ ამა ჩემსა განზრახულსა. `+
-                `კაცი ბრძენი ვერ გასწირავს მოყვარესა მოყვარულსა; `+
-                `მე სიტყვასა ერთსა გკადრებ, პლატონისგან სწავლა-თქმულსა: `+
-                `"სიცრუე და ორპირობა ავნებს ხორცსა, მერმე სულსა".`,
+        text: `ვიცი, ბოლოდ`,
         type: "ტექსტი", // Song, book or smthng
         name: "ვეფხისტყაოსანი", // Song, book or smthng name
         author: "შოთა რუსთაველი", // Song, book or smthng author
-        picUrl: "https://picsum.photos/200/300" // Song, book or smthng picture
+        picUrl: "https://loremflickr.com/200/300" // Song, book or smthng picture
     })
     text.save()
 })

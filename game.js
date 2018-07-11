@@ -33,6 +33,7 @@ class Game  {
         this.progress = ZERO_GAME
         this.text = {}
         this.players = []
+        this.finished = {}
         this.waitingTime = 10
         this.textTime = 0
         this.timePassed = 0

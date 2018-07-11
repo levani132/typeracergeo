@@ -47,35 +47,15 @@ class Player {
 }
         
 class Game {
-    constructor () {
-        this.id = '';
-        this.progress = ZERO_GAME;
-        this.text = {
-            id: "",
-            text: "",
-            type: "", // Song, book or smthng
-            name: "", // Song, book or smthng name
-            author: "", // Song, book or smthng author
-            picUrl: "" // Song, book or smthng picture
-        };
-        this.players = [new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0)];
-        this.waitingTime = 10;
-        this.textTime = 0;
-        this.timePassed = 0;
-        this.finishedCount = 0;
-    }
-
-    static copy (game) {
-        var newGame = new Game();
-        newGame.id = game.id;
-        newGame.progress = game.progress;
-        newGame.text = game.text;
-        newGame.players = game.players.map(player => Player.copy(player));
-        newGame.waitingTime = game.waitingTime;
-        newGame.textTime = game.textTime;
-        newGame.timePassed = game.timePassed;
-        newGame.finishedCount = game.finishedCount;
-        return newGame;
+    constructor (game) {
+        this.id = game.id;
+        this.progress = game.progress;
+        this.text = game.text;
+        this.players = game.players.map(player => Player.copy(player));
+        this.waitingTime = game.waitingTime;
+        this.textTime = game.textTime;
+        this.timePassed = game.timePassed;
+        this.finishedCount = game.finishedCount;
     }
 
     timeLeft () {

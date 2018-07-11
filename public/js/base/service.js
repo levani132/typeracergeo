@@ -40,10 +40,18 @@ const Service = {
             }).catch(reject);
         });
     },
-    GetRandomGame (player) {
+    GetRandomGame (playerAndGameId) {
         var self = this;
         return new Promise((resolve, reject) => {
-            self.post (this.domain + '/GetRandomGame', player).then((game) => {
+            self.post (this.domain + '/GetRandomGame', playerAndGameId).then((game) => {
+                resolve(game);
+            }).catch(reject);
+        });
+    },
+    GetPracticeGame (playerAndGameId) {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            self.post (this.domain + '/GetPracticeGame', playerAndGameId).then((game) => {
                 resolve(game);
             }).catch(reject);
         });

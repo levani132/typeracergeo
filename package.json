@@ -17,8 +17,7 @@
     "gulp-uglify-es": "^1.0.4",
     "nodemon": "^1.17.5"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
@@ -31,7 +30,9 @@
   "author": "Bero&Sano",
   "license": "ISC",
   "nodemonConfig": {
-    "ignore": ["build/"],
+    "ignore": [
+      "build/"
+    ],
     "exec": "gulp debug && node index.js"
   }
 }
