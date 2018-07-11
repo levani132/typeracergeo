@@ -19,8 +19,8 @@ const ZERO_GAME = 0,
         ENDED_FOR_ME = 4, 
         ENDED_GAME = 5
 
-//mongoose.connect('mongodb://sa:abcdef1@ds129321.mlab.com:29321/typeracergeo')
-mongoose.connect('mongodb://127.0.0.1:27017/')
+mongoose.connect('mongodb://sa:123456qwerty@ds129321.mlab.com:29321/typeracergeo')
+// mongoose.connect('mongodb://127.0.0.1:27017/')
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -57,6 +57,7 @@ app.post('/UpdateInfo', (req, res) => {
     var myGame = req.body;
     var serverGame = games.games[myGame.id];
     if(!serverGame){
+        res.status(505);
         res.send('error');
         return;
     }
