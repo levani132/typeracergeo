@@ -46,7 +46,7 @@ class Player {
         return ((PlayGround.game.text.text.length - this.errorCount) / PlayGround.game.text.text.length * 100).toFixed(1);
     }
     timePassed () {
-        return `${Math.round(this.timeNeeded / 60 / 60)}:${Math.round(this.timeNeeded / 60 % 60 / 10)}${Math.round(this.timeNeeded / 60 % 60 % 10)}`;
+        return `${Math.floor(this.timeNeeded / 60 / 60)}:${Math.floor(this.timeNeeded / 60 % 60 / 10)}${Math.floor(this.timeNeeded / 60 % 60 % 10)}`;
     }
 }
         

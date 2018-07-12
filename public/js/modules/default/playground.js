@@ -157,7 +157,7 @@ var PlayGround = {
                     <h2 class="text-review-author">${this.game.text.author}</h2>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">შენი სიჩქარე:</span>
-                        <span class="text-review-stat-value">${this.player.speed}ს/წთ</span>
+                        <span class="text-review-stat-value">${this.player.speed} ს/წთ</span>
                     </div>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">დრო:</span>

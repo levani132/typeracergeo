@@ -82,6 +82,12 @@ app.post('/UpdateInfo', (req, res) => {
         }
     });
     res.send(serverGame);
+    if(serverGame.progress == ENDED_GAME){
+        serverGame.sentEnded++;
+        if(serverGame.sentEnded == serverGame.players.length){
+            delete games.games[serverGame.id];
+        }
+    }
 })
 
 app.get('/GetRandomText', (req, res) => {

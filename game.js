@@ -38,6 +38,7 @@ class Game  {
         this.textTime = 0
         this.timePassed = 0
         this.finishedCount = 0
+        this.sentEnded = 0
     }
 }
 

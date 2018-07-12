@@ -12,6 +12,13 @@ Module.module({
     view () {
         switch (Router.innerRoute()){
             case 'friend':
+                if (Router.idRoute() != "") {
+                    PlayGround.init();
+                    return PlayGround.view();
+                } else {
+                    FriendGame.init();
+                    return FriendGame.view();
+                }
             case 'practice':
             case 'world':
                 PlayGround.init();
