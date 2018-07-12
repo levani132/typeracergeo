@@ -1,0 +1,8 @@
+const FriendGame = {
+    init () {
+        
+    },
+    view() {
+
+    }
+}
