@@ -63,6 +63,31 @@ class Games {
         this.games[game.id] = game
         return this.getLastOpenGame()
     }
+
+    startGame(game){
+        game.progress = STARTED_GAME
+        var interval = setInterval(() => {
+            game.timePassed += 3;
+            if (game.timePassed % 60 == 0) {
+                game.textTime--;
+                if(game.textTime <= 0 || Object.keys(game.finished).length == game.players.length){
+                    game.progress = ENDED_GAME
+                    clearInterval(interval);
+                }
+            }
+        }, 50)
+    }
+    
+    startNewGame(game){
+        game.progress = STARTED_NEW_GAME
+        var interval = setInterval(() => {
+            game.waitingTime--;
+            if (game.waitingTime <= 0) {
+                clearInterval(interval);
+                this.startGame(game);
+            }
+        }, 1000)
+    }
 }
 
 module.exports = {Game, Games, Player, guid}

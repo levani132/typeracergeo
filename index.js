@@ -43,36 +43,11 @@ app.post('/GetRandomGame', (req, res) => {
     }else{
         game.players.push(req.body)
         if (game.players.length == 2){
-            startNewGame(game)
+            games.startNewGame(game)
         }
         res.send(game)
     }
 })
-
-function startGame(game){
-    game.progress = STARTED_GAME
-    var interval = setInterval(() => {
-        game.timePassed += 3;
-        if (game.timePassed % 60 == 0) {
-            game.textTime--;
-            if(game.textTime <= 0 || Object.keys(game.finished).length == game.players.length){
-                game.progress = ENDED_GAME
-                clearInterval(interval);
-            }
-        }
-    }, 50)
-}
-
-function startNewGame(game){
-    game.progress = STARTED_NEW_GAME
-    var interval = setInterval(() => {
-        game.waitingTime--;
-        if (game.waitingTime <= 0) {
-            clearInterval(interval);
-            startGame(game);
-        }
-    }, 1000)
-}
 
 app.post('/GetPracticeGame', (req, res) => {
     game = games.getNewGame()
@@ -82,7 +57,7 @@ app.post('/GetPracticeGame', (req, res) => {
     Text.findRandom().then(text => {
         game.text = text
         game.textTime = text.text.split(' ').length * 6
-        startNewGame(game)
+        games.startNewGame(game)
         res.send(game)
     })
 })
@@ -97,6 +72,7 @@ app.post('/UpdateInfo', (req, res) => {
     }
     if(player.progress == 100 && !serverGame.finished[player.id]){
         serverGame.finished[player.id] = true;
+        serverGame.finishedCount++;
     }
     serverGame.players.forEach(serverPlayer => {
         if(serverPlayer.id == player.id){

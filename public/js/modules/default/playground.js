@@ -2,10 +2,9 @@ var PlayGround = {
     init () {
         this.game = new Game({id: "", progress: 0, text: {}, players: [], waitingTime: 10, textTime: 0, timePassed: 0, finishedCount: 0});
         this.states = [GameState("")];
-        this.finishedCount = 0;
         this.isOffline = false;
         this.counterInterval = null;
-        this.player = new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0);
+        this.player = new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0, 0);
         var serviceCall;
         if (Router.innerRoute() == 'world') {
             serviceCall = 'GetRandomGame';
@@ -17,7 +16,6 @@ var PlayGround = {
         var self = this;
         Service[serviceCall](self.player).then(game => {
             self.game = new Game(game);
-            console.log(self.game);
             self.game.players.forEach(player => {
                 player.isMe = false;
                 if(player.id == User.loggedInUser.id){
@@ -29,7 +27,6 @@ var PlayGround = {
             self.mainLoop ();
         });
     },
-    finishedCount: 0,
     states: [],
     game: null,
     isOffline: false,
@@ -42,12 +39,16 @@ var PlayGround = {
             PlayGround.raceInput.oninput = PlayGround.input;
         }
     },
+    onExit () {
+        if(this.mainInterval != null){
+            clearInterval(this.mainInterval);
+        }
+    },
     mainLoop () {
         var self = this;
         this.mainInterval = setInterval(() => {
-            console.log(self.player);
             Service.UpdateInfo({gameId: self.game.id, player: self.player}).then(game => {
-                self.game.players = game.players.map(player => Player.copy(player));
+                self.game.players = game.players.map(player => player.id != User.loggedInUser.id ? Player.copy(player) : self.player);
                 self.game.players.forEach(player => {
                     player.isMe = false;
                     if(player.id == User.loggedInUser.id){
@@ -57,10 +58,14 @@ var PlayGround = {
                 })
                 document.querySelector('.race-tracks').innerHTML = self.game.players.map(player => player.view()).join('');
                 var refreshAll = self.game.progress != game.progress;
-                self.game.progress = game.progress;
+                self.game.progress = Math.max(game.progress, self.game.progress);
+                self.game.finishedCount = game.finishedCount;
                 if(self.game.progress == STARTED_NEW_GAME){
                     self.game.waitingTime = game.waitingTime;
                     document.querySelector('.race-counter').outerHTML = self.counterView();
+                }else if(self.game.progress == ENDED_GAME){
+                    clearInterval(PlayGround.mainInterval);
+                    PlayGround.mainInterval = null;
                 }
                 self.game.timePassed = game.timePassed;
                 self.game.textTime = game.textTime;
@@ -104,24 +109,14 @@ var PlayGround = {
             PlayGround.game.playerProgress(User.loggedInUser.id, 
                 PlayGround.states[PlayGround.states.length - 1].position / PlayGround.states[PlayGround.states.length - 1].text.length);
             PlayGround.game.playerPlace(User.loggedInUser.id, ++PlayGround.game.finishedCount);
-            if (PlayGround.game.finishedCount == PlayGround.game.players.length) {
-                PlayGround.game.progress = ENDED_GAME;
-                clearInterval(PlayGround.counterInterval);
-                clearInterval(PlayGround.mainInterval);
-            } else {
-                PlayGround.game.progress = ENDED_FOR_ME;
-            }
+            PlayGround.game.progress = ENDED_FOR_ME;
+            PlayGround.player.timeNeeded = PlayGround.game.timePassed;
             if(!PlayGround.isOffline){
                 User.addStatistics(PlayGround.game.playerFind(User.loggedInUser.id));
             }
             document.querySelector('.race-section').outerHTML = PlayGround.view();
-        }else{
-
         }
         document.querySelector('.race-text').innerHTML = PlayGround.states[PlayGround.states.length - 1].raceText();
-    },
-    timePassed () {
-        return `${Math.round(this.game.timePassed / 60 / 60)}:${Math.round(this.game.timePassed / 60 % 60)}`;
     },
     googleSearch(query){
         return `http://www.google.com/search?q=${query.split(' ').join('+')}`;
@@ -153,7 +148,6 @@ var PlayGround = {
         `;
     },
     aboutTextView () {
-        var player = this.game.playerFind(User.loggedInUser.id);
         return `
             <div class="text-review">
                 <h1 class="text-review-state">ახლახანს შეყვანილი ნაწყვეტი არის ${this.game.text.type}დან:</h1>
@@ -163,15 +157,15 @@ var PlayGround = {
                     <h2 class="text-review-author">${this.game.text.author}</h2>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">შენი სიჩქარე:</span>
-                        <span class="text-review-stat-value">${player.speed}ს/წთ</span>
+                        <span class="text-review-stat-value">${this.player.speed}ს/წთ</span>
                     </div>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">დრო:</span>
-                        <span class="text-review-stat-value">${this.timePassed()}</span>
+                        <span class="text-review-stat-value">${this.player.timePassed()}</span>
                     </div>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">აკურატულობა:</span>
-                        <span class="text-review-stat-value">${player.accuracy()}%</span>
+                        <span class="text-review-stat-value">${this.player.accuracy()}%</span>
                     </div>
                 </div>
             </div>

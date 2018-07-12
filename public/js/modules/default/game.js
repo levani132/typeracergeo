@@ -6,7 +6,7 @@ const ZERO_GAME = 0,
         ENDED_GAME = 5;
 
 class Player {
-    constructor (name, place, speed, progress, isMe, id, nWords, errorCount) {
+    constructor (name, place, speed, progress, isMe, id, nWords, errorCount, timeNeeded) {
         this.name = name;
         this.place = place;
         this.speed = speed;
@@ -15,6 +15,7 @@ class Player {
         this.id = id;
         this.nWords = nWords;
         this.errorCount = errorCount;
+        this.timeNeeded = timeNeeded;
     }
     static copy (player) {
         return new Player(player.name, player.place, player.speed,
@@ -43,6 +44,9 @@ class Player {
     }
     accuracy () {
         return ((PlayGround.game.text.text.length - this.errorCount) / PlayGround.game.text.text.length * 100).toFixed(1);
+    }
+    timePassed () {
+        return `${Math.round(this.timeNeeded / 60 / 60)}:${Math.round(this.timeNeeded / 60 % 60 / 10)}${Math.round(this.timeNeeded / 60 % 60 % 10)}`;
     }
 }
         
