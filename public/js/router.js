@@ -16,12 +16,16 @@ const Router = {
                 var n = this.components.length;
                 while(n--){
                     this.components[this.components.length - 1].onLoad();
-                    this.components.pop();
                 }
             }
         });
     },
     routeResolver(){
+        var n = this.components.length;
+        while(n--){
+            this.components[this.components.length - 1].onExit && this.components[this.components.length - 1].onExit();
+            this.components.pop();
+        }
         var module = window.location.pathname.split('/')[1] || '';
         if (!Module.checkModule(module)){
             module = Router.routes[module];

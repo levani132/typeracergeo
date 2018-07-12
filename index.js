@@ -31,7 +31,7 @@ var friendGames = new Games()
 
 app.post('/GetRandomGame', (req, res) => {
     var game = games.getLastOpenGame()
-    if(!game){
+    if(!game || game.players.some(player => player.id == req.body.id)){
         game = games.getNewGame()
         game.players.push(req.body)
         Text.findRandom().then(text => {
