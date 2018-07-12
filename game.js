@@ -39,6 +39,7 @@ class Game  {
         this.timePassed = 0
         this.finishedCount = 0
         this.sentEnded = 0
+        this.abandonedUsers = []
     }
 }
 
