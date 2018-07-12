@@ -76,6 +76,8 @@ var PlayGround = {
                         self.startGame ();
                     }
                 }
+            }).catch(error => {
+                clearInterval(self.mainInterval);
             });
         }, 100);
     },
