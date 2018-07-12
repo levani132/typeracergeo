@@ -82,8 +82,9 @@ app.post('/UpdateInfo', (req, res) => {
         }
     });
     res.send(serverGame);
-    if(serverGame.progress == ENDED_GAME){
+    if(serverGame.progress == ENDED_GAME && !serverGame.abandonedUsers.includes(player.id)){
         serverGame.sentEnded++;
+        serverGame.abandonedUsers.push(player.id);
         if(serverGame.sentEnded == serverGame.players.length){
             delete games.games[serverGame.id];
         }
