@@ -46,7 +46,8 @@ const Router = {
         return window.location.pathname;
     },
     loadMe (component) {
-        this.components.push(component);
+        if(!this.components.includes(component))
+            this.components.push(component);
     }
 }
 
