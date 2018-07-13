@@ -21,7 +21,7 @@ var PlayGround = {
             serviceCall = 'GetPracticeGame';
         }
         var self = this;
-        Service[serviceCall](Router.innerRoute() != null ? {player: self.player, gameId: self.gameId} : self.player).then(game => {
+        Service[serviceCall](self.gameId != null ? {player: self.player, gameId: self.gameId} : self.player).then(game => {
             self.game = new Game(game);
             self.game.players.forEach(player => {
                 player.isMe = false;
