@@ -210,7 +210,7 @@ var PlayGround = {
                                                         ${this.game.progress < STARTED_GAME ? 'placeholder="შეიყვანეთ მოცემული ტექსტი აქ, როცა რბოლა დაიწყება"' : ""}>
                 <div class="race-footer clearfix">
                     <a href="/race${this.gameId != null ? `/newgame/${this.gameId}` : ''}" class="race-link leave">რბოლიდან გასვლა</a>
-                    <a href="${this.gameId != null ? Router.fullRoute() : `/race/newgame/${this.gameId}`}" class="race-link next" ${this.game.progress >= ENDED_FOR_ME ? "" : "hidden"}>შემდეგი რბოლა</a>
+                    <a href="${this.gameId == null ? Router.fullRoute() : `/race/newgame/${this.gameId}`}" class="race-link next" ${this.game.progress >= ENDED_FOR_ME ? "" : "hidden"}>შემდეგი რბოლა</a>
                 </div>
                 ${this.game.progress >= ENDED_FOR_ME ? this.aboutTextView() : ""}
             </div class="race-section">
