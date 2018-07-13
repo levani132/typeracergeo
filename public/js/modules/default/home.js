@@ -14,7 +14,7 @@ const Home = {
                 <li class="race-type">
                     <span class="fas fa-3x fa-user-friends race-type-icon"></span>
                     <div class="race-type-body">
-                        <a href="/race/friend">
+                        <a href="/race/newgame">
                             <h1 class="race-type-link">შეეჯიბრე მეგობარს</h1>
                         </a>
                         <span class="race-type-sub-text">მოიწვიე მეგობრები პირად რბოლაზე</span>

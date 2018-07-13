@@ -30,7 +30,6 @@ var games = new Games()
 var friendGames = new Games()
 
 app.post('/GetRandomGame', (req, res) => {
-    console.log(games);
     var game = games.getLastOpenGame()
     if(!game || game.players.some(player => player.id == req.body.id)){
         game = games.getNewGame()
@@ -111,5 +110,7 @@ app.get('/addd', (req, res) => {
 })
 
 app.get('/*', (req, res) => res.sendFile(__dirname + '/' + public + '/index.html'))
+
+app.post('/*', (req, res) => res.sendFile(__dirname + '/' + public + '/index.html'))
 
 app.listen(process.env.PORT || 3000, () => console.log('App listening on port 3000!'))

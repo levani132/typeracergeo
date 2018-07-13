@@ -58,5 +58,59 @@ const Service = {
     },
     UpdateInfo (game) {
         return this.post (this.domain + '/UpdateInfo', game);
+    },
+    GetFriendGame (gameId) {
+        var self = this;
+        return new Promise ((resolve, reject) => {
+            self.post (self.domain + '/GetFriendGame', {gameId}).then((game) => {
+                // --------- Temp
+                game = new Game({
+                    id: "randomString",
+                    progress: NEW_GAME,
+                    text: {
+                        guid: "randomString",
+                        text: "something in the way she moves, attracts me like no other lover.",
+                        type: "song", // Song, book or smthng
+                        name: "something", // Song, book or smthng name
+                        author: "The Beatles" , // Song, book or smthng author
+                        picUrl: "https://i.ytimg.com/vi/lURY5hzr3Cc/hqdefault.jpg" // Song, book or smthng picture
+                    },
+                    players: [],
+                    waitingTime: 10,
+                    textTime: 80,
+                    timePassed: 0,
+                    finishedCount: 0
+                })
+                // --- endTemp
+                resolve(game);
+            }).catch(reject);
+        });
+    },
+    GetFriendsUpdate (gameId) {
+        var self = this;
+        return new Promise ((resolve, reject) => {
+            self.post (self.domain + '/GetFriendsUpdate', gameId).then((game) => {
+                // --------- Temp
+                game = new Game({
+                    id: "randomString",
+                    progress: NEW_GAME,
+                    text: {
+                        guid: "randomString",
+                        text: "something in the way she moves, attracts me like no other lover.",
+                        type: "song", // Song, book or smthng
+                        name: "something", // Song, book or smthng name
+                        author: "The Beatles" , // Song, book or smthng author
+                        picUrl: "https://i.ytimg.com/vi/lURY5hzr3Cc/hqdefault.jpg" // Song, book or smthng picture
+                    },
+                    players: [],
+                    waitingTime: 10,
+                    textTime: 80,
+                    timePassed: 0,
+                    finishedCount: 0
+                })
+                // --- endTemp
+                resolve(game);
+            }).catch(reject);
+        });
     }
 }
