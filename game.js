@@ -66,7 +66,7 @@ class Games {
         return this.getLastOpenGame()
     }
 
-    startGame(game){
+    static startGame(game){
         game.progress = STARTED_GAME
         var interval = setInterval(() => {
             game.timePassed += 3;
@@ -80,7 +80,7 @@ class Games {
         }, 50)
     }
     
-    startNewGame(game){
+    static startNewGame(game){
         game.progress = STARTED_NEW_GAME
         var interval = setInterval(() => {
             game.waitingTime--;

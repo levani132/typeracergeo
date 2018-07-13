@@ -4,6 +4,7 @@ Module.module({
         '/game.state.js',
         '/playground.js',
         '/home.js',
+        '/friend.game.js',
         '/game.js'
     ],
     onInit () {
@@ -11,14 +12,10 @@ Module.module({
     },
     view () {
         switch (Router.innerRoute()){
+            case 'newfriend':
+                FriendGame.init();
+                return FriendGame.view();
             case 'friend':
-                if (Router.idRoute() != "") {
-                    PlayGround.init();
-                    return PlayGround.view();
-                } else {
-                    FriendGame.init();
-                    return FriendGame.view();
-                }
             case 'practice':
             case 'world':
                 PlayGround.init();

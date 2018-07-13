@@ -30,6 +30,7 @@ var games = new Games()
 var friendGames = new Games()
 
 app.post('/GetRandomGame', (req, res) => {
+    console.log(games);
     var game = games.getLastOpenGame()
     if(!game || game.players.some(player => player.id == req.body.id)){
         game = games.getNewGame()
@@ -43,7 +44,7 @@ app.post('/GetRandomGame', (req, res) => {
     }else{
         game.players.push(req.body)
         if (game.players.length == 2){
-            games.startNewGame(game)
+            Games.startNewGame(game)
         }
         res.send(game)
     }
@@ -57,7 +58,7 @@ app.post('/GetPracticeGame', (req, res) => {
     Text.findRandom().then(text => {
         game.text = text
         game.textTime = text.text.split(' ').length * 6
-        games.startNewGame(game)
+        Games.startNewGame(game)
         res.send(game)
     })
 })
