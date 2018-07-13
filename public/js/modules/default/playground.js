@@ -34,6 +34,7 @@ var PlayGround = {
             self.mainLoop ();
         }).catch(error => {
             if(self.gameId){
+                console.log(error);
                 Router.redirectTo(`${window.location.origin}/race/newgame/${this.gameId}`);
             }
         });

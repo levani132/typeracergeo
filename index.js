@@ -71,8 +71,15 @@ app.post('/GetFriendGame', (req, res) => {
             friendGames.games[gameId] = new Game()
             game = friendGames.games[gameId]
             game.id = gameId;
+            Text.findRandom().then(text => {
+                game.text = text
+                game.textTime = text.text.split(' ').length * 6
+                game.progress = NEW_GAME
+                res.send(game)
+            })
+        }else{
+            res.send(game)
         }
-        res.send(game)
     }else{
         game = friendGames.getNewGame()
         Text.findRandom().then(text => {
@@ -141,6 +148,7 @@ app.get('/GetRandomText', (req, res) => {
 })
 
 app.get('/addd', (req, res) => {
+    Text.remove({}, () => {});
     var text = new Text(Object.keys(req.body).length != 0 ? req.body : {
         guid: guid(),
         text: `ვიცი, ბოლოდ`,
