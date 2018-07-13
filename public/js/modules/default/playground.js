@@ -5,16 +5,23 @@ var PlayGround = {
         this.isOffline = false;
         this.counterInterval = null;
         this.player = new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0, 0);
+        this.gameId = null;
         var serviceCall;
         if (Router.innerRoute() == 'world') {
             serviceCall = 'GetRandomGame';
         } else if (Router.innerRoute() == 'friend') {
+            this.gameId = Router.idRoute();
+            if(!this.gameId.length){
+                Router.redirectTo(`${window.location.origin}/race/newgame`);
+                return;
+            }
+            serviceCall = 'ConnectFriendGame';
         } else if (Router.innerRoute() == 'practice') {
             this.isOffline = true;
             serviceCall = 'GetPracticeGame';
         }
         var self = this;
-        Service[serviceCall](self.player).then(game => {
+        Service[serviceCall](Router.innerRoute() != null ? {player: self.player, gameId: self.gameId} : self.player).then(game => {
             self.game = new Game(game);
             self.game.players.forEach(player => {
                 player.isMe = false;
@@ -25,6 +32,10 @@ var PlayGround = {
             self.states = [GameState(self.game.text.text)];
             document.querySelector('.race-section').outerHTML = self.view();
             self.mainLoop ();
+        }).catch(error => {
+            if(self.gameId){
+                Router.redirectTo(`${window.location.origin}/race/newgame/${this.gameId}`);
+            }
         });
     },
     states: [],
@@ -33,6 +44,7 @@ var PlayGround = {
     counterInterval: null,
     mainInterval: null,
     player: null,
+    gameId: null,
     onLoad () {
         if (Router.innerRoute() != '')  {
             PlayGround.raceInput = document.querySelector('.race-input');
@@ -197,8 +209,8 @@ var PlayGround = {
                 <input type="text" class="race-input" ${this.game.progress == STARTED_GAME ? '' : (this.game.progress > STARTED_GAME ? "hidden" : "disabled")} 
                                                         ${this.game.progress < STARTED_GAME ? 'placeholder="შეიყვანეთ მოცემული ტექსტი აქ, როცა რბოლა დაიწყება"' : ""}>
                 <div class="race-footer clearfix">
-                    <a href="/race" class="race-link leave">რბოლიდან გასვლა</a>
-                    <a href="${Router.fullRoute()}" class="race-link next" ${this.game.progress >= ENDED_FOR_ME ? "" : "hidden"}>შემდეგი რბოლა</a>
+                    <a href="/race${this.gameId != null ? `/newgame/${this.gameId}` : ''}" class="race-link leave">რბოლიდან გასვლა</a>
+                    <a href="${this.gameId != null ? Router.fullRoute() : `/race/newgame/${this.gameId}`}" class="race-link next" ${this.game.progress >= ENDED_FOR_ME ? "" : "hidden"}>შემდეგი რბოლა</a>
                 </div>
                 ${this.game.progress >= ENDED_FOR_ME ? this.aboutTextView() : ""}
             </div class="race-section">

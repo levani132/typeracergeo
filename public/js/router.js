@@ -33,6 +33,10 @@ const Router = {
         Header.refresh();
         this.openModule(module);
     },
+    redirectTo (url) {
+        window.history.pushState({}, "", url);
+        Router.routeResolver();
+    },
     idRoute () {
         return window.location.pathname.split('/')[3] || '';
     },
@@ -57,8 +61,7 @@ document.body.onclick = e => {
     if (from){
         if(from.href.substr(0, origin.length) === origin){
             e.preventDefault();
-            window.history.pushState({}, "", from.href);
-            Router.routeResolver();
+            Router.redirectTo(from.href);
         }
     }
 }

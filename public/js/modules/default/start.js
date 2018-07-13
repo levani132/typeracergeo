@@ -1,3 +1,10 @@
+const ZERO_GAME = 0, 
+        NEW_GAME = 1, 
+        STARTED_NEW_GAME = 2, 
+        STARTED_GAME = 3, 
+        ENDED_FOR_ME = 4, 
+        ENDED_GAME = 5;
+
 Module.module({
     name: 'default',
     scripts: [

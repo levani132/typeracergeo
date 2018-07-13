@@ -86,7 +86,7 @@ class Games {
             game.waitingTime--;
             if (game.waitingTime <= 0) {
                 clearInterval(interval);
-                this.startGame(game);
+                Games.startGame(game);
             }
         }, 1000)
     }

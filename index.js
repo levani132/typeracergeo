@@ -17,8 +17,8 @@ const NEW_GAME = 1,
         STARTED_GAME = 3, 
         ENDED_GAME = 5
 
-mongoose.connect('mongodb://sa:123456qwerty@ds129321.mlab.com:29321/typeracergeo')
-// mongoose.connect('mongodb://127.0.0.1:27017/')
+mongoose.connect('mongodb://sa:123456qwerty@ds129321.mlab.com:29321/typeracergeo',{ useNewUrlParser: true })
+// mongoose.connect('mongodb://127.0.0.1:27017/',{ useNewUrlParser: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -50,7 +50,7 @@ app.post('/GetRandomGame', (req, res) => {
 })
 
 app.post('/GetPracticeGame', (req, res) => {
-    game = games.getNewGame()
+    var game = games.getNewGame()
     game.players.push(req.body)
     game.waitingTime = 5
     game.progress = STARTED_NEW_GAME
@@ -62,9 +62,49 @@ app.post('/GetPracticeGame', (req, res) => {
     })
 })
 
+app.post('/GetFriendGame', (req, res) => {
+    var gameId = req.body.gameId;
+    var game;
+    if(gameId){
+        game = friendGames.games[gameId];
+        if(!game){
+            friendGames.games[gameId] = new Game()
+            game = friendGames.games[gameId]
+            game.id = gameId;
+        }
+        res.send(game)
+    }else{
+        game = friendGames.getNewGame()
+        Text.findRandom().then(text => {
+            game.text = text
+            game.textTime = text.text.split(' ').length * 6
+            game.progress = NEW_GAME
+            res.send(game)
+        })
+    }
+})
+
+app.post('/ConnectFriendGame', (req, res) => {
+    var {player, gameId} = req.body;
+    game = friendGames.games[gameId];
+    if(!game){
+        res.status(500);
+        res.send('error');
+        return;
+    }
+    var playerExists = false;
+    game.players.forEach(gamePlayer => playerExists |= player.id == gamePlayer.id);
+    if(!playerExists)
+        game.players.push(player)
+    if (game.players.length == 2 && game.progress < STARTED_NEW_GAME){
+        Games.startNewGame(game)
+    }
+    res.send(game)
+})
+
 app.post('/UpdateInfo', (req, res) => {
     var {gameId, player} = req.body;
-    var serverGame = games.games[gameId];
+    var serverGame = games.games[gameId] || friendGames.games[gameId];
     if(!serverGame){
         res.status(500);
         res.send('error');
@@ -86,7 +126,10 @@ app.post('/UpdateInfo', (req, res) => {
         serverGame.sentEnded++;
         serverGame.abandonedUsers.push(player.id);
         if(serverGame.sentEnded == serverGame.players.length){
-            delete games.games[serverGame.id];
+            if(games.games[serverGame.id])
+                delete games.games[serverGame.id];
+            else
+                delete friendGames.games[serverGame.id];
         }
     }
 })

@@ -35,6 +35,7 @@ gulp.task('core', function(){
 
 gulp.task('base', function(){
   return gulp.src([
+    'public/js/base/toastr.js',
     'public/js/base/header.js',
     'public/js/base/ranks.js',
     'public/js/base/service.js',

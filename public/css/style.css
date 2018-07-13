@@ -35,7 +35,7 @@ html, body{
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .clearfix::after {
@@ -616,4 +616,19 @@ main {
     text-decoration: underline;
 }
 
+.toastr{
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #303030;
+    padding: 10px;
+    border-radius: 10px;
+    opacity: 1;
+    transition: opacity 1s;
+    color: white;
+}
 
+.toastr.done{
+    opacity: 0;
+}
