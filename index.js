@@ -17,6 +17,13 @@ const NEW_GAME = 1,
         STARTED_GAME = 3, 
         ENDED_GAME = 5
 
+function logMemory () {
+    const used = process.memoryUsage();
+    for (let key in used) {
+        console.log(`\t${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+    }
+}
+
 mongoose.connect('mongodb://sa:123456qwerty@ds129321.mlab.com:29321/typeracergeo',{ useNewUrlParser: true })
 // mongoose.connect('mongodb://127.0.0.1:27017/',{ useNewUrlParser: true })
 var db = mongoose.connection;
@@ -38,6 +45,8 @@ app.post('/GetRandomGame', (req, res) => {
             game.text = text
             game.textTime = text.text.split(' ').length * 6
             game.progress = NEW_GAME
+            console.log('Created new random game');
+            logMemory();
             res.send(game)
         })
     }else{
@@ -58,6 +67,8 @@ app.post('/GetPracticeGame', (req, res) => {
         game.text = text
         game.textTime = text.text.split(' ').length * 6
         Games.startNewGame(game)
+        console.log('Created new practice game');
+        logMemory();
         res.send(game)
     })
 })
@@ -65,29 +76,27 @@ app.post('/GetPracticeGame', (req, res) => {
 app.post('/GetFriendGame', (req, res) => {
     var gameId = req.body.gameId;
     var game;
+    var resolve = text => {
+        game.text = text
+        game.textTime = text.text.split(' ').length * 6
+        game.progress = NEW_GAME
+        console.log('Created new friend game');
+        logMemory();
+        res.send(game)
+    };
     if(gameId){
         game = friendGames.games[gameId];
         if(!game){
             friendGames.games[gameId] = new Game()
             game = friendGames.games[gameId]
             game.id = gameId;
-            Text.findRandom().then(text => {
-                game.text = text
-                game.textTime = text.text.split(' ').length * 6
-                game.progress = NEW_GAME
-                res.send(game)
-            })
+            Text.findRandom().then(resolve)
         }else{
             res.send(game)
         }
     }else{
         game = friendGames.getNewGame()
-        Text.findRandom().then(text => {
-            game.text = text
-            game.textTime = text.text.split(' ').length * 6
-            game.progress = NEW_GAME
-            res.send(game)
-        })
+        Text.findRandom().then(resolve)
     }
 })
 
@@ -133,10 +142,15 @@ app.post('/UpdateInfo', (req, res) => {
         serverGame.sentEnded++;
         serverGame.abandonedUsers.push(player.id);
         if(serverGame.sentEnded == serverGame.players.length){
-            if(games.games[serverGame.id])
+            if(games.games[serverGame.id]){
                 delete games.games[serverGame.id];
-            else
+                console.log('Deleted random/practice game');
+                logMemory();
+            }else{
                 delete friendGames.games[serverGame.id];
+                console.log('Deleted friend game');
+                logMemory();
+            }
         }
     }
 })

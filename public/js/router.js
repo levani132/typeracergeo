@@ -2,7 +2,8 @@ const Router = {
     routes: {
         '' : 'default',
         'race' : 'default',
-        'register' : 'login'
+        'register' : 'login',
+        'text' : 'texts'
     },
     components: [],
     openModule(module){

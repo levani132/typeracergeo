@@ -61,8 +61,13 @@ footer,header,hgroup,menu,nav,section {
 }
 
 a, a:focus, a:active, a:visited {
-    color: black;
+    color: var(--dark-color);
+    opacity: 1;
     text-decoration: none;
+}
+
+a:hover {
+    opacity: 0.8;
 }
 
 * {
@@ -107,15 +112,6 @@ header {
     padding-left: 60px;
 }
 
-.header-right a, .race-section a {
-    color: var(--dark-color);
-    opacity: 1;
-}
-
-.header-right a:hover, .race-section a:hover {
-    opacity: 0.8;
-}
-
 .header-right>*{
     transform: skewX(45deg);
 }
@@ -144,6 +140,7 @@ header {
 
 .nav-item a:hover {
     background-color: rgba(0,0,0,.1);
+    opacity: 1;
 }
 
 .header-right-wrapper{
@@ -636,7 +633,7 @@ main {
 .add-text-form input, .add-text-form textarea {
     display: block;
     margin: 10px auto;
-    padding: 5px;
+    padding: 7px;
     border: solid 1px #ccc;
     border-radius: 3px;
     resize: none;
@@ -646,6 +643,79 @@ main {
     width: 400px;
 }
 
+.add-text-form input[type='submit'] {
+    cursor: pointer;
+}
+
 .add-text-form textarea {
     height: 100px;
+}
+
+.texts-header {
+    font-size: 25px;
+    color: var(--compl-color);
+}
+
+.texts-list {
+    margin: 20px 0;
+}
+
+.texts-item {
+    font-size: 15px;
+    margin: 5px;
+    margin-left: 14px;
+}
+
+.texts-item-link {
+    font-size: 18px;
+}
+
+.texts-search-input {
+    display: block;
+    margin: 10px auto;
+    padding: 7px;
+    border: solid 1px #ccc;
+    border-radius: 3px;
+    width: calc(100% - 20px);
+    font-size: 18px;
+}
+
+.text-view-header-wrapper {
+    margin-bottom: 20px;
+}
+
+.text-view-header {
+    font-size: 30px;
+    color: var(--compl-color);
+}
+
+.text-view-left {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 5px;
+    height: 225px;
+    width: 585px;
+    position: relative;
+}
+
+.text-view-best-header {
+    color: var(--compl-color);
+    font-weight: bold;
+    display: block;
+}
+
+.text-view-picture {
+    max-width: 150px;
+    max-height: 225px;
+}
+
+.text-view-text {
+    margin: 20px 0;
+}
+
+.text-view-race {
+    float: right;
+    bottom: 0;
+    right: 0;
+    position: absolute;
 }
