@@ -5,13 +5,22 @@ const ZERO_GAME = 0,
         ENDED_FOR_ME = 4, 
         ENDED_GAME = 5
 
-function guid() {
+function guid () {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
                 .substring(1)
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+}
+
+function gameid () {
+    function s4(){
+        return Math.floor((1 + Math.random()) * 0x100000)
+                .toString(36)
+                .substring(1)
+    }
+    return s4() + s4();
 }
 
 class Player {
@@ -29,7 +38,7 @@ class Player {
 
 class Game  {
     constructor () {
-        this.id = guid()
+        this.id = gameid()
         this.progress = ZERO_GAME
         this.text = {}
         this.players = []

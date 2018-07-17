@@ -10,68 +10,60 @@ var GameState = (text) => {return {
     red: {a:0, b:0},
     line: {a:0, b:text.indexOf(' ', 0)},
     rest: {a:text.indexOf(' ', 0), b:text.length},
-    step (c) {
+    step (newInput) {
+        var c = newInput[newInput.length - 1];
         var gameState = this.copy();
-        var correctNewChar = gameState.correct && gameState.text[gameState.position] == c;
+        var correctNewChar = true;
+        var textIncorrectStart = gameState.green.b;
+        var newInputIncorrectStart;
+        for(newInputIncorrectStart = 0;
+            newInputIncorrectStart < newInput.length;
+            newInputIncorrectStart++, textIncorrectStart++){
+            if(newInput[newInputIncorrectStart] != gameState.text[textIncorrectStart]){
+                correctNewChar = false;
+                break;
+            }
+        }
         var correctNewWord = c == ' ' && correctNewChar;
 
-        // Green
-        if(correctNewWord || gameState.position == gameState.text.length - 1 && correctNewChar){
-            gameState.green.b = gameState.position + 1;
-        }
-
-        // Green line
-        if(correctNewWord || gameState.position == gameState.text.length - 1 && correctNewChar){
-            gameState.greenLine.a = gameState.position + 1;
-            gameState.greenLine.b = gameState.position + 1;
-        }else if(correctNewChar){
-            gameState.greenLine.b = gameState.position + 1;
-        }
+        // Green Line
+        gameState.greenLine.a = gameState.green.b;
+        gameState.greenLine.b = textIncorrectStart;
 
         // Red Line
-        if(!correctNewChar && gameState.text[gameState.position] != ' ' && gameState.currentWord) {
-            if(!gameState.correct){
-                gameState.redLine.b++;
-            }else{
-                gameState.redLine.a = gameState.position;
-                gameState.redLine.b = gameState.position + 1;
-            }
-        }
+        gameState.redLine.a = textIncorrectStart;
+        var spaceIdx = gameState.text.indexOf(' ', textIncorrectStart);
+        gameState.redLine.b = Math.min(
+                                spaceIdx == -1 ? gameState.text.length : spaceIdx, 
+                                this.green.b + newInput.length
+                            );
 
         // Line
-        if(gameState.currentWord){
-            if(gameState.text[gameState.position] != ' '){
-                gameState.line.a++;
-            }else if(correctNewChar){
-                gameState.line.a = gameState.position + 1;
-                gameState.line.b = gameState.text.indexOf(' ', gameState.line.a);
-                if(gameState.line.b == -1){
-                    gameState.line.b = gameState.text.length;
-                }
-            }
+        gameState.line.a = gameState.redLine.b;
+        gameState.line.b = gameState.text.indexOf(' ', gameState.line.a);
+        if(gameState.line.b == -1){
+            gameState.line.b = gameState.text.length;
         }
 
         // Red
-        if (!correctNewChar) {
-            if (gameState.text[gameState.position] == ' ' && gameState.currentWord){
-                gameState.red.a = gameState.position;
-                gameState.red.b = gameState.position + 1;
-            }
-            if(!gameState.currentWord)
-                gameState.red.b = gameState.position + 1;
-        }
+        // if (!correctNewChar) {
+        //     if (gameState.text[gameState.position] == ' ' && gameState.currentWord){
+        //         gameState.red.a = gameState.position;
+        //         gameState.red.b = gameState.position + 1;
+        //     }
+        //     if(!gameState.currentWord)
+        //         gameState.red.b = gameState.position + 1;
+        // }
+        gameState.red.a = gameState.line.b;
+        gameState.red.b = Math.max(this.green.b + newInput.length, gameState.red.a);
         
         // Rest
-        gameState.rest.a = gameState.text.indexOf(' ', gameState.position + 1);
-        if(gameState.rest.a == -1){
-            gameState.rest.a = gameState.text.length;
-        }
-        if(!correctNewChar && (gameState.text[gameState.position] == ' ' || !gameState.currentWord))
-            gameState.rest.a = gameState.position + 1;
+        gameState.rest.a = gameState.red.b;
 
-        gameState.currentWord = !(!gameState.currentWord || !correctNewChar && gameState.text[gameState.position] == ' ');
+        gameState.currentWord = textIncorrectStart + newInput.length - newInputIncorrectStart < 
+                                gameState.text.indexOf(' ', textIncorrectStart - newInputIncorrectStart);
         gameState.correct = correctNewChar;
-        gameState.position++;
+        gameState.position = this.green.b + newInput.length;
         return gameState;
     },
     getPart (place) {

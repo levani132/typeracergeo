@@ -24,6 +24,11 @@ gulp.task('js', function(){
     .pipe(gulp.dest('build/public/js'))
 });
 
+gulp.task('js debug', function(){
+  return gulp.src(['public/js/**/*.js', '!public/js/base/**/*.js', '!public/js/*.js'])
+    .pipe(gulp.dest('build/public/js'))
+});
+
 gulp.task('core', function(){
   return gulp.src('public/js/*.js')
     .pipe(sourcemaps.init())
@@ -71,4 +76,4 @@ gulp.task('clean', function(){
 });
 
 gulp.task('default', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base', 'clean map' ]);
-gulp.task('debug', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base' ]);
+gulp.task('debug', [ 'html', 'css', 'js debug', 'fonts', 'img', 'core', 'base' ]);

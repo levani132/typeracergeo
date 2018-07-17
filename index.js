@@ -147,8 +147,8 @@ app.get('/GetRandomText', (req, res) => {
     })
 })
 
-app.get('/addd', (req, res) => {
-    Text.remove({}, () => {});
+app.post('/AddText', (req, res) => {
+    //Text.remove({}, () => {});
     var text = new Text(Object.keys(req.body).length != 0 ? req.body : {
         guid: guid(),
         text: `ვიცი, ბოლოდ`,
@@ -157,7 +157,13 @@ app.get('/addd', (req, res) => {
         author: "შოთა რუსთაველი", // Song, book or smthng author
         picUrl: "https://loremflickr.com/200/300" // Song, book or smthng picture
     })
-    text.save()
+    text.save(err => {
+        if(err){
+            res.status(500);
+            res.send(err);
+        }
+        res.send(true);
+    })
 })
 
 app.get('/*', (req, res) => res.sendFile(__dirname + '/' + public + '/index.html'))

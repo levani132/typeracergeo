@@ -33,6 +33,7 @@
     "ignore": [
       "build/"
     ],
-    "exec": "gulp debug && node index.js"
+    "exec": "gulp debug && node index.js",
+    "ext": "css,js,html"
   }
 }

@@ -112,5 +112,11 @@ const Service = {
                 resolve(game);
             }).catch(reject);
         });
+    },
+    AddText (text) {
+        var self = this;
+        return new Promise ((resolve, reject) => {
+            self.post (self.domain + '/AddText', text).then(resolve).catch(reject);
+        });
     }
 }

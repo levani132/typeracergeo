@@ -6,7 +6,7 @@ const Header = {
             document.querySelector('header').outerHTML = this.view();
         });
     },
-    disable(){
+    disable () {
         this.disabled = true;
         this.refresh();
     },

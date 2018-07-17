@@ -70,9 +70,9 @@ var PlayGround = {
                     }
                 })
                 document.querySelector('.race-tracks').innerHTML = self.game.players.map(player => player.view()).join('');
-                var refreshAll = self.game.progress != game.progress;
+                var refreshAll = self.game.progress < game.progress;
                 self.game.progress = Math.max(game.progress, self.game.progress);
-                self.game.finishedCount = game.finishedCount;
+                self.game.finishedCount = Math.max(game.finishedCount, self.game.finishedCount);
                 if(self.game.progress == STARTED_NEW_GAME){
                     self.game.waitingTime = game.waitingTime;
                     document.querySelector('.race-counter').outerHTML = self.counterView();
@@ -102,22 +102,28 @@ var PlayGround = {
         PlayGround.raceInput.focus();
     },
     input () {
-        if(PlayGround.raceInput.value.length < PlayGround.states[PlayGround.states.length - 1].lastInput.length){
-            var n = PlayGround.states[PlayGround.states.length - 1].lastInput.length - PlayGround.raceInput.value.length;
-            for(var i = 0; i < n; i++)
-                PlayGround.states.splice(PlayGround.states.length - 1, 1);
-        }else if(PlayGround.states[PlayGround.states.length - 1].text.length != PlayGround.states[PlayGround.states.length - 1].position){
-            var c = PlayGround.raceInput.value[PlayGround.raceInput.value.length - 1];
-            var newState = PlayGround.states[PlayGround.states.length - 1].step(c);
-            if (newState.correct && c == ' ') {
-                PlayGround.raceInput.value = '';
-                PlayGround.game.playerProgress(User.loggedInUser.id, newState.position / newState.text.length);
-            }
-            newState.lastInput = PlayGround.raceInput.value;
-            PlayGround.states.push(newState);
-            if (!newState.correct) {
-                PlayGround.game.playerError(User.loggedInUser.id);
-            }
+        var c = PlayGround.raceInput.value[PlayGround.raceInput.value.length - 1];
+        var newState = PlayGround.states[PlayGround.states.length - 1].copy();
+        
+        var wordEnd = newState.text.indexOf(' ', newState.green.b);
+        wordEnd = wordEnd == -1 ? newState.text.length : wordEnd;
+        var curWord = newState.text.substring(newState.green.b, wordEnd + 1);
+        
+        while (curWord == PlayGround.raceInput.value.substring(0, wordEnd - newState.green.b + 1)) {
+            PlayGround.raceInput.value = PlayGround.raceInput.value.substr(wordEnd - newState.green.b + 1);
+            PlayGround.game.playerProgress(User.loggedInUser.id, newState.greenLine.b / newState.text.length);
+            newState.green.b = wordEnd == newState.text.length ? wordEnd : wordEnd + 1;
+            if(wordEnd == newState.text.length)
+                break;
+            wordEnd = newState.text.indexOf(' ', newState.green.b);
+            wordEnd = wordEnd == -1 ? newState.text.length : wordEnd;
+            curWord = newState.text.substring(newState.green.b, wordEnd + 1);
+        }
+        newState = newState.step(PlayGround.raceInput.value);
+        newState.lastInput = PlayGround.raceInput.value;
+        PlayGround.states.push(newState);
+        if (!newState.correct) {
+            PlayGround.game.playerError(User.loggedInUser.id);
         }
         if(PlayGround.states[PlayGround.states.length - 1].position == PlayGround.states[PlayGround.states.length - 1].text.length && PlayGround.states[PlayGround.states.length - 1].correct){
             PlayGround.raceInput.value = "";
@@ -196,7 +202,7 @@ var PlayGround = {
                         (this.game.progress < STARTED_NEW_GAME ? 'დაელოდეთ ოპონენტებს...' :
                         (this.game.progress == STARTED_NEW_GAME ? 'რბოლა მალე დაიწყება!' :
                         (this.game.progress == STARTED_GAME ? 'წერე!' : 
-                        (this.game.progress == ENDED_FOR_ME ? `თქვენ დაიკავეთ ${this.game.players[0].placeString()} ადგილი.` : 
+                        (this.game.progress == ENDED_FOR_ME ? `თქვენ დაიკავეთ ${this.player.placeString()} ადგილი.` : 
                         ('რბოლა დასრულდა.')))))
                     }
                 </h1>

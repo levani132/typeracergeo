@@ -632,3 +632,20 @@ main {
 .toastr.done{
     opacity: 0;
 }
+
+.add-text-form input, .add-text-form textarea {
+    display: block;
+    margin: 10px auto;
+    padding: 5px;
+    border: solid 1px #ccc;
+    border-radius: 3px;
+    resize: none;
+}
+
+.add-text-form input[type='text'], .add-text-form textarea {
+    width: 400px;
+}
+
+.add-text-form textarea {
+    height: 100px;
+}

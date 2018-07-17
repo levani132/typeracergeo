@@ -5,6 +5,7 @@ const Module = {
         "about": false,
         "texts": false,
         "login": false,
+        "addtext": false,
     },
     loadedModules: {},
     loaded: false,
@@ -13,14 +14,13 @@ const Module = {
         if(Module.modules[module]){
             return false;
         }else{
-            Module.loadScripts([`${modulesPath}${module}${modulesStart}`]);
+            Module.loadScripts([`${modulesPath}${module}${modulesStart}`], module);
             return true;
         }
     },
     loadScripts(scripts, module){
         return new Promise(function(resolve, reject){
-            var selector = module ? `.${module}-module` : `.modules`;
-            var moduleElem = document.querySelector(selector);
+            var moduleElem = document.querySelector(`.modules`);
             scripts = scripts || new Array();
             var loadedScripts = 0;
             function resolveLoad(){
@@ -52,7 +52,7 @@ const Module = {
         });
     },
     module (module) {
-        Module.loadScripts(module.scripts.map(script => `${modulesPath}${module.name}${script}`)).then(() => {
+        Module.loadScripts(module.scripts.map(script => `${modulesPath}${module.name}${script}`), module.name).then(() => {
             Module.loadedModules[module.name] = module;
             Module.modules[module.name] = true;
             module.onInit();
