@@ -33,90 +33,33 @@ const Service = {
         });
     },
     GetRandomText () {
-        var self = this;
-        return new Promise((resolve, reject) => {
-            self.get (this.domain + '/GetRandomText').then((text) => {
-                resolve(text);
-            }).catch(reject);
-        });
+        return this.post (self.domain + '/GetRandomText');
     },
     GetRandomGame (playerAndGameId) {
-        var self = this;
-        return new Promise((resolve, reject) => {
-            self.post (this.domain + '/GetRandomGame', playerAndGameId).then((game) => {
-                resolve(game);
-            }).catch(reject);
-        });
+        return this.post (self.domain + '/GetRandomGame', playerAndGameId);
     },
     GetPracticeGame (playerAndGameId) {
-        var self = this;
-        return new Promise((resolve, reject) => {
-            self.post (this.domain + '/GetPracticeGame', playerAndGameId).then((game) => {
-                resolve(game);
-            }).catch(reject);
-        });
+        return this.post (self.domain + '/GetPracticeGame', playerAndGameId);
     },
     UpdateInfo (game) {
         return this.post (this.domain + '/UpdateInfo', game);
     },
     GetFriendGame (gameId) {
-        var self = this;
-        return new Promise ((resolve, reject) => {
-            self.post (self.domain + '/GetFriendGame', {gameId}).then((game) => {
-                // --------- Temp
-                // game = new Game({
-                //     id: "randomString",
-                //     progress: NEW_GAME,
-                //     text: {
-                //         guid: "randomString",
-                //         text: "something in the way she moves, attracts me like no other lover.",
-                //         type: "song", // Song, book or smthng
-                //         name: "something", // Song, book or smthng name
-                //         author: "The Beatles" , // Song, book or smthng author
-                //         picUrl: "https://i.ytimg.com/vi/lURY5hzr3Cc/hqdefault.jpg" // Song, book or smthng picture
-                //     },
-                //     players: [],
-                //     waitingTime: 10,
-                //     textTime: 80,
-                //     timePassed: 0,
-                //     finishedCount: 0
-                // })
-                // --- endTemp
-                resolve(game);
-            }).catch(reject);
-        });
+        return this.post (self.domain + '/GetFriendGame', {gameId});
     },
     ConnectFriendGame (playerAndGameId) {
-        var self = this;
-        return new Promise ((resolve, reject) => {
-            self.post (self.domain + '/ConnectFriendGame', playerAndGameId).then((game) => {
-                // --------- Temp
-                // game = new Game({
-                //     id: "randomString",
-                //     progress: NEW_GAME,
-                //     text: {
-                //         guid: "randomString",
-                //         text: "something in the way she moves, attracts me like no other lover.",
-                //         type: "song", // Song, book or smthng
-                //         name: "something", // Song, book or smthng name
-                //         author: "The Beatles" , // Song, book or smthng author
-                //         picUrl: "https://i.ytimg.com/vi/lURY5hzr3Cc/hqdefault.jpg" // Song, book or smthng picture
-                //     },
-                //     players: [],
-                //     waitingTime: 10,
-                //     textTime: 80,
-                //     timePassed: 0,
-                //     finishedCount: 0
-                // })
-                // --- endTemp
-                resolve(game);
-            }).catch(reject);
-        });
+        return this.post (self.domain + '/ConnectFriendGame', playerAndGameId);
     },
     AddText (text) {
-        var self = this;
-        return new Promise ((resolve, reject) => {
-            self.post (self.domain + '/AddText', text).then(resolve).catch(reject);
-        });
+        return this.post (self.domain + '/AddText', text);
+    },
+    GetText (textId) {
+        return this.post (self.domain + '/GetText', {textId});
+    },
+    GetLastTexts () {
+        return this.post (self.domain + '/GetLastTexts');
+    },
+    SearchText (SearchingText) {
+        return this.post (self.domain + '/SearchText', {SearchingText});
     }
 }

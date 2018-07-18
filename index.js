@@ -155,12 +155,6 @@ app.post('/UpdateInfo', (req, res) => {
     }
 })
 
-app.get('/GetRandomText', (req, res) => {
-    Text.findRandom().then(text => {
-        res.send(text);
-    })
-})
-
 app.post('/AddText', (req, res) => {
     //Text.remove({}, () => {});
     var text = new Text(Object.keys(req.body).length != 0 ? req.body : {
@@ -177,6 +171,17 @@ app.post('/AddText', (req, res) => {
             res.send(err);
         }
         res.send(true);
+    })
+})
+
+app.post('/GetText', (req, res) => {
+    Text.findById(req.body.textId, (err, dbres) => {
+        if(err){
+            res.status(404);
+            res.send('text not found');
+            return;
+        }
+        res.send(dbres);
     })
 })
 

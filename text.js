@@ -7,7 +7,12 @@ var textSchema = mongoose.Schema({
     type: String, // Song, book or smthng
     name: String, // Song, book or smthng name
     author: String, // Song, book or smthng author
-    picUrl: String // Song, book or smthng picture
+    picUrl: String, // Song, book or smthng picture
+    player: {
+        speed: Number,
+        timeNeeded: String,
+        accuracy: Number
+    }
 })
 
 var Text = mongoose.model('Text', textSchema)
