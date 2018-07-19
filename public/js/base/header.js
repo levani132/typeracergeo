@@ -22,9 +22,9 @@ const Header = {
                        <a href="/race" ${Router.route() == 'race' ? `class="active"` : ``}><img src="/public/img/mainLogo.png" alt="მწერალი"></a>
                     </div>
                     <ul class="navigation inline-block">
-                        <li class="nav-item inline-block"><a href="/race" ${Router.route() == 'race' ? `class="active"` : ``}>რბოლა</a>
-                        </li><li class="nav-item inline-block"><a href="/texts" ${Router.route() == 'texts' ? `class="active"` : ``}>ტექსტები</a>
-                        </li><li class="nav-item inline-block"><a href="/about" ${Router.route() == 'about' ? `class="active"` : ``}>ჩვენს შესახებ</a>
+                        <li class="nav-item inline-block"><a href="/race" ${Router.curModule() == 'default' ? `class="active"` : ``}>რბოლა</a>
+                        </li><li class="nav-item inline-block"><a href="/texts" ${Router.curModule() == 'texts' ? `class="active"` : ``}>ტექსტები</a>
+                        </li><li class="nav-item inline-block"><a href="/about" ${Router.curModule() == 'about' ? `class="active"` : ``}>ჩვენს შესახებ</a>
                         </li>
                     </ul>
                 </div>

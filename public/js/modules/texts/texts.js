@@ -1,17 +1,18 @@
 const Texts = {
-    openedText: {
-        guid: guid(),
-        text: `ვიცი, ბოლოდ`,
-        type: "ტექსტი", // Song, book or smthng
-        name: "ვეფხისტყაოსანი", // Song, book or smthng name
-        author: "შოთა რუსთაველი", // Song, book or smthng author
-        picUrl: "https://loremflickr.com/200/300", // Song, book or smthng picture
-        player: {
-            speed: "120",
-            timeNeeded: "1:07",
-            accuracy: "97.9"
-        }
-    },
+    openedText: null,
+    // {
+    //     guid: guid(),
+    //     text: `ვიცი, ბოლოდ`,
+    //     type: "ტექსტი", // Song, book or smthng
+    //     name: "ვეფხისტყაოსანი", // Song, book or smthng name
+    //     author: "შოთა რუსთაველი", // Song, book or smthng author
+    //     picUrl: "https://loremflickr.com/200/300", // Song, book or smthng picture
+    //     player: {
+    //         speed: "120",
+    //         timeNeeded: "1:07",
+    //         accuracy: "97.9"
+    //     }
+    // },
     texts: [{
         guid: guid(),
         text: `ვიცი, ბოლოდ`,
@@ -27,40 +28,52 @@ const Texts = {
     }],
     searchingText: "",
     onLoad () {
-        var self = this;
         if(Router.route() == 'text'){
-            Service.GetText(Router.innerRoute()).then(self.getText);
+            Service.GetText(Router.innerRoute()).then(this.getText);
         }else{
-            Service.GetLastTexts().then(self.getTexts);
+            Service.GetLastTexts().then(this.getTexts).catch(this.noTexts);
         }
         this.refresh();
     },
     onExit () {
-
+        Texts.openedText = null;
     },
     getText(text) {
         Texts.openedText = text;
         Texts.refresh();
     },
     getTexts(texts) {
-        Texts.texts = text;
+        Texts.texts = texts;
+        Texts.refresh();
+    },
+    noTexts (error) {
+        Texts.texts = [];
         Texts.refresh();
     },
     search (e) {
-        this.searchingText = e.target.value;
-        var self = this;
-        if(this.searchingText.length)
-            Service.SearchText(this.SearchingText).then(self.getTexts);
+        Texts.searchingText = e.target.value;
+        var refreshInput = () => {
+            document.querySelector('.texts-list').innerHTML = Texts.texts.length ? Texts.texts.map(text => Texts.miniTextView(text)).join('') : 'ტექსტები არ მოიძებნა';
+            document.querySelector('.texts-search-input').selectionStart = e.target.value.length;
+            document.querySelector('.texts-search-input').selectionEnd = e.target.value.length;
+            document.querySelector('.texts-search-input').focus();
+        }
+        var getResp = res => {
+            Texts.getTexts(res);
+            refreshInput();
+        }
+        var getErr = err => {
+            Texts.noTexts(err);
+            refreshInput();
+        }
+        if(Texts.searchingText.length)
+            Service.SearchText(Texts.searchingText).then(getResp).catch(getErr);
         else
-            Service.GetLastTexts().then(self.getText);
-        this.refresh();
-        document.querySelector('.texts-search-input').selectionStart = e.target.value.length;
-        document.querySelector('.texts-search-input').selectionEnd = e.target.value.length;
-        document.querySelector('.texts-search-input').focus();
+            Service.GetLastTexts().then(getResp).catch(getErr);
     },
     refresh () {
         if(Router.route() == 'text'){
-            document.querySelector('.texts-view').outerHTML = this.textView();
+            document.querySelector('.text-view').outerHTML = this.textView();
         }else{
             document.querySelector('.texts-section').outerHTML = this.view();
         }
@@ -107,7 +120,7 @@ const Texts = {
                 ` : `
                     <h2 class="text-view-best-header">ეს ტექსტი ჯერ არცერთ მომხმარებელს არ შეუყვანია.</h2>
                 `}
-                    <a href="#" class="text-view-race">ამ ტექსტით რბოლა</a>
+                    <a href="/race/text/${this.openedText.guid}" class="text-view-race">ამ ტექსტით რბოლა</a>
                 </div>
                 <div class="race-text text-view-text">${this.openedText.text}</div>
             </div>
@@ -120,26 +133,9 @@ const Texts = {
                 <h1 class="texts-header">${this.searchingText.length ? `ტექსტები რომლებიც შეიცავს: "${this.searchingText}"` : `ბოლოს გამოყენებული ტექსტები` }</h1>
                 <input class="texts-search-input" oninput="Texts.search(event)" placeholder="შეიყვანეთ ნაწყვეტი საძებნი ტექსტიდან..." value="${this.searchingText}">
                 <ol class="texts-list">
-                    ${this.texts.map(text => this.miniTextView(text)).join('')}
-                    ${false ? `<li class="texts-item">
-                        <a href="#" class="texts-item-link">მგზავრის წერილები</a> ილია ჭავჭავაძე
-                    </li>
-                    <li class="texts-item">
-                        <a href="#" class="texts-item-link">ვეფხისტყაოსანი</a> შოთა რუსთაველი
-                    </li>
-                    <li class="texts-item">
-                        <a href="#" class="texts-item-link">მერანი</a> ნიკოლოზ ბართაშვილი
-                    </li>
-                    <li class="texts-item">
-                        <a href="#" class="texts-item-link">გამზრდელი</a> აკაკი წერეთელი
-                    </li>
-                    <li class="texts-item">
-                        <a href="#" class="texts-item-link">კაცია, ადამიანი?!</a> ილია ჭავჭავაძე
-                    </li>
-                    <li class="texts-item">
-                        <a href="#" class="texts-item-link">ჯაყოს ხიზნები</a> მიხეილ ჯავახიშვილი
-                    </li>` : ''}
+                    ${this.texts.length ? this.texts.map(text => this.miniTextView(text)).join('') : 'ტექსტები არ მოიძებნა'}
                 </ol>
+                <a href="/addtext">ტექსტის დამატება</a>
             </div>
         `;
     }

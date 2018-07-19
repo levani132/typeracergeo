@@ -20,6 +20,7 @@ Module.module({
     view () {
         switch (Router.innerRoute()){
             case 'newgame':
+            case 'text':
                 FriendGame.init();
                 return FriendGame.view();
             case 'friend':

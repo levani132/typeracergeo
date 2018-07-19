@@ -44,8 +44,11 @@ const FriendGame = {
         this.inputElem = null,
         this.playUrl = "";
         this.thisUrl = "";
+        var textId = null;
+        if(Router.innerRoute() == 'text')
+            textId = Router.idRoute();
         var self = this;
-        Service.GetFriendGame(Router.idRoute()).then(game => {
+        Service.GetFriendGame(Router.idRoute(), textId).then(game => {
             self.game = game;
             self.game.players = game.players.map(player => {
                 var player = Player.copy(player)

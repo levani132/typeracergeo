@@ -75,6 +75,7 @@ app.post('/GetPracticeGame', (req, res) => {
 
 app.post('/GetFriendGame', (req, res) => {
     var gameId = req.body.gameId;
+    var textId = req.body.textId;
     var game;
     var resolve = text => {
         game.text = text
@@ -90,7 +91,11 @@ app.post('/GetFriendGame', (req, res) => {
             friendGames.games[gameId] = new Game()
             game = friendGames.games[gameId]
             game.id = gameId;
-            Text.findRandom().then(resolve)
+            if(textId) {
+                Text.find({guid: textId}, (err, dbres) => resolve(dbres[0]));
+            }else{
+                Text.findRandom().then(resolve);
+            }
         }else{
             res.send(game)
         }
@@ -137,6 +142,23 @@ app.post('/UpdateInfo', (req, res) => {
             })
         }
     });
+    if(player.progress == 100){
+        Text.findOne({guid: serverGame.text.guid}, (err, text) => {
+            text.player = {
+                speed: player.speed,
+                timeNeeded: `${Math.floor(player.timeNeeded / 60 / 60)}:${Math.floor(player.timeNeeded / 60 % 60 / 10)}${Math.floor(player.timeNeeded / 60 % 60 % 10)}`,
+                accuracy: ((serverGame.text.text.length - player.errorCount) / serverGame.text.text.length * 100).toFixed(1)
+            }
+            text.date = Date.now();
+            text.save(err => {
+                if(err){
+                    console.error(err);
+                    return;
+                }
+                console.log('player saved successfully');
+            })
+        })
+    }
     res.send(serverGame);
     if(serverGame.progress == ENDED_GAME && !serverGame.abandonedUsers.includes(player.id)){
         serverGame.sentEnded++;
@@ -175,10 +197,32 @@ app.post('/AddText', (req, res) => {
 })
 
 app.post('/GetText', (req, res) => {
-    Text.findById(req.body.textId, (err, dbres) => {
+    Text.find({guid:req.body.textId}, (err, dbres) => {
         if(err){
             res.status(404);
             res.send('text not found');
+            return;
+        }
+        res.send(dbres[0]);
+    })
+})
+
+app.post('/GetLastTexts', (req, res) => {
+    Text.find({}).sort({date: -1}).limit(10).exec((err, dbres) => {
+        if(err){
+            res.status(404);
+            res.send('No texts');
+            return;
+        }
+        res.send(dbres);
+    })
+})
+
+app.post('/SearchText', (req, res) => {
+    Text.find({"text": { $regex: req.body.SearchingText, $options: 'i' }}, (err, dbres) => {
+        if(err){
+            res.status(404);
+            res.send('No texts');
             return;
         }
         res.send(dbres);

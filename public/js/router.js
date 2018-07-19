@@ -27,7 +27,7 @@ const Router = {
             this.components[this.components.length - 1].onExit && this.components[this.components.length - 1].onExit();
             this.components.pop();
         }
-        var module = window.location.pathname.split('/')[1] || '';
+        var module = this.route ();
         if (!Module.checkModule(module)){
             module = Router.routes[module];
         }
@@ -46,6 +46,13 @@ const Router = {
     },
     route () {
         return window.location.pathname.split('/')[1] || '';
+    },
+    curModule () {
+        var module = this.route ();
+        if (!Module.checkModule(module)){
+            module = Router.routes[module];
+        }
+        return module;
     },
     fullRoute () {
         return window.location.pathname;

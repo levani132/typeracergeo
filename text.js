@@ -12,7 +12,8 @@ var textSchema = mongoose.Schema({
         speed: Number,
         timeNeeded: String,
         accuracy: Number
-    }
+    },
+    date: Date
 })
 
 var Text = mongoose.model('Text', textSchema)

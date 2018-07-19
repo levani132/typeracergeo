@@ -5,7 +5,7 @@ const Service = {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() { 
                 if (xhr.readyState == 4 && xhr.status == 200)
-                    resolve(xhr.responseText[0] == '{' ? JSON.parse(xhr.responseText) : xhr.responseText);
+                    resolve(xhr.responseText[0] == '{' || xhr.responseText[0] == '[' ? JSON.parse(xhr.responseText) : xhr.responseText);
                 else if (xhr.readyState == 4 && xhr.status != 200)
                     reject(xhr.response);
             }
@@ -33,33 +33,33 @@ const Service = {
         });
     },
     GetRandomText () {
-        return this.post (self.domain + '/GetRandomText');
+        return this.post (this.domain + '/GetRandomText');
     },
     GetRandomGame (playerAndGameId) {
-        return this.post (self.domain + '/GetRandomGame', playerAndGameId);
+        return this.post (this.domain + '/GetRandomGame', playerAndGameId);
     },
     GetPracticeGame (playerAndGameId) {
-        return this.post (self.domain + '/GetPracticeGame', playerAndGameId);
+        return this.post (this.domain + '/GetPracticeGame', playerAndGameId);
     },
     UpdateInfo (game) {
         return this.post (this.domain + '/UpdateInfo', game);
     },
-    GetFriendGame (gameId) {
-        return this.post (self.domain + '/GetFriendGame', {gameId});
+    GetFriendGame (gameId, textId) {
+        return this.post (this.domain + '/GetFriendGame', {gameId, textId});
     },
     ConnectFriendGame (playerAndGameId) {
-        return this.post (self.domain + '/ConnectFriendGame', playerAndGameId);
+        return this.post (this.domain + '/ConnectFriendGame', playerAndGameId);
     },
     AddText (text) {
-        return this.post (self.domain + '/AddText', text);
+        return this.post (this.domain + '/AddText', text);
     },
     GetText (textId) {
-        return this.post (self.domain + '/GetText', {textId});
+        return this.post (this.domain + '/GetText', {textId});
     },
     GetLastTexts () {
-        return this.post (self.domain + '/GetLastTexts');
+        return this.post (this.domain + '/GetLastTexts');
     },
     SearchText (SearchingText) {
-        return this.post (self.domain + '/SearchText', {SearchingText});
+        return this.post (this.domain + '/SearchText', {SearchingText});
     }
 }
