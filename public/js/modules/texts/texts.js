@@ -1,31 +1,6 @@
 const Texts = {
     openedText: null,
-    // {
-    //     guid: guid(),
-    //     text: `ვიცი, ბოლოდ`,
-    //     type: "ტექსტი", // Song, book or smthng
-    //     name: "ვეფხისტყაოსანი", // Song, book or smthng name
-    //     author: "შოთა რუსთაველი", // Song, book or smthng author
-    //     picUrl: "https://loremflickr.com/200/300", // Song, book or smthng picture
-    //     player: {
-    //         speed: "120",
-    //         timeNeeded: "1:07",
-    //         accuracy: "97.9"
-    //     }
-    // },
-    texts: [{
-        guid: guid(),
-        text: `ვიცი, ბოლოდ`,
-        type: "ტექსტი", // Song, book or smthng
-        name: "ვეფხისტყაოსანი", // Song, book or smthng name
-        author: "შოთა რუსთაველი", // Song, book or smthng author
-        picUrl: "https://loremflickr.com/200/300", // Song, book or smthng picture
-        player: {
-            speed: "120",
-            timeNeeded: "1:07",
-            accuracy: "97.9"
-        }
-    }],
+    texts: [],
     searchingText: "",
     onLoad () {
         if(Router.route() == 'text'){
@@ -53,17 +28,17 @@ const Texts = {
     search (e) {
         Texts.searchingText = e.target.value;
         var refreshInput = () => {
-            document.querySelector('.texts-list').innerHTML = Texts.texts.length ? Texts.texts.map(text => Texts.miniTextView(text)).join('') : 'ტექსტები არ მოიძებნა';
-            document.querySelector('.texts-search-input').selectionStart = e.target.value.length;
-            document.querySelector('.texts-search-input').selectionEnd = e.target.value.length;
-            document.querySelector('.texts-search-input').focus();
+            document.querySelector('.texts-list').innerHTML = 
+                                        Texts.texts.length ? 
+                                            Texts.texts.map(text => Texts.miniTextView(text)).join('') : 
+                                            'ტექსტები არ მოიძებნა';
         }
         var getResp = res => {
-            Texts.getTexts(res);
+            Texts.texts = res;
             refreshInput();
         }
         var getErr = err => {
-            Texts.noTexts(err);
+            Texts.texts = [];
             refreshInput();
         }
         if(Texts.searchingText.length)
