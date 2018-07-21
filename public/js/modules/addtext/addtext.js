@@ -56,11 +56,26 @@ const AddText = {
         Router.loadMe(this);
         return `
             <form class="add-text-form">
-                <textarea oninput="AddText.input();" name="text" id="add-text-text" placeholder="Write a text..."></textarea>
-                <input oninput="AddText.input();" name="type" id="add-text-type" type="text" placeholder="Text type...">
-                <input oninput="AddText.input();" name="name" id="add-text-name" type="text" placeholder="Text name...">
-                <input oninput="AddText.input();" name="author" id="add-text-author" type="text" placeholder="Text author...">
-                <input oninput="AddText.input();" name="picUrl" id="add-text-picUrl" type="text" placeholder="Text picture...">
+                <div class="input-wrapper">
+                    <textarea autocomplete="falsea" oninput="AddText.input();" name="text" id="add-text-text" required></textarea>
+                    <span class="input-placeholder">Text</span>
+                </div>
+                <div class="input-wrapper">
+                    <input autocomplete="falsea" oninput="AddText.input();" name="type" id="add-text-type" type="text" required>
+                    <span class="input-placeholder">Text type</span>
+                </div>
+                <div class="input-wrapper">
+                    <input autocomplete="falsea" oninput="AddText.input();" name="name" id="add-text-name" type="text" required>
+                    <span class="input-placeholder">Text name</span>
+                </div>
+                <div class="input-wrapper">
+                    <input autocomplete="falsea" oninput="AddText.input();" name="author" id="add-text-author" type="text" required>
+                    <span class="input-placeholder">Text author</span>
+                </div>
+                <div class="input-wrapper">
+                    <input autocomplete="falsea" oninput="AddText.input();" name="picUrl" id="add-text-picUrl" type="text" required>
+                    <span class="input-placeholder">Text picture url</span>
+                </div>
                 <input oninput="AddText.input();" type="submit" value="submit" onclick="AddText.saveText(event)">
             </form>
             ${this.textView ()}
