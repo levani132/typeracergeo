@@ -45,7 +45,7 @@ const AddText = {
                 <h1 class="text-review-state">შედეგი:</h1>
                 <h1 class="text-review-state">ახლახანს შეყვანილი ნაწყვეტი არის ${document.querySelector('#add-text-type') ? document.querySelector('#add-text-type').value : ""}დან:</h1>
                 <img class="text-review-picture" 
-                        src="${document.querySelector('#add-text-picUrl') ? 
+                        src="${document.querySelector('#add-text-picUrl').value ? 
                                 document.querySelector('#add-text-picUrl').value : 
                                 "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Ic_camera_alt_48px.svg/2000px-Ic_camera_alt_48px.svg.png"}"
                         alt="Picture for text">
