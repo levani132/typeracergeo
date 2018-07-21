@@ -174,7 +174,7 @@ var PlayGround = {
                 <h1 class="text-review-state">ახლახანს შეყვანილი ნაწყვეტი არის ${this.game.text.type}დან:</h1>
                 <img class="text-review-picture" src="${this.game.text.picUrl}">
                 <div class="text-review-left">
-                    <a class="text-review-header" href="/texts/${this.game.text.guid}">${this.game.text.name}</a>
+                    <a class="text-review-header" href="/text/${this.game.text.guid}">${this.game.text.name}</a>
                     <h2 class="text-review-author">${this.game.text.author}</h2>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">შენი სიჩქარე:</span>
