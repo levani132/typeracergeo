@@ -71,6 +71,9 @@ var PlayGround = {
                 })
                 document.querySelector('.race-tracks').innerHTML = self.game.players.map(player => player.view()).join('');
                 var refreshAll = self.game.progress < game.progress;
+                if(refreshAll){
+                    console.log(self.game.progress, game.progress);
+                }
                 self.game.progress = Math.max(game.progress, self.game.progress);
                 self.game.finishedCount = Math.max(game.finishedCount, self.game.finishedCount);
                 if(self.game.progress == STARTED_NEW_GAME){
@@ -171,7 +174,7 @@ var PlayGround = {
                 <h1 class="text-review-state">ახლახანს შეყვანილი ნაწყვეტი არის ${this.game.text.type}დან:</h1>
                 <img class="text-review-picture" src="${this.game.text.picUrl}">
                 <div class="text-review-left">
-                    <a class="text-review-header" href="/texts/${this.game.text.id}">${this.game.text.name}</a>
+                    <a class="text-review-header" href="/texts/${this.game.text.guid}">${this.game.text.name}</a>
                     <h2 class="text-review-author">${this.game.text.author}</h2>
                     <div class="text-review-stat">
                         <span class="text-review-stat-name">შენი სიჩქარე:</span>

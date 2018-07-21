@@ -131,10 +131,6 @@ app.post('/UpdateInfo', (req, res) => {
         res.send('error');
         return;
     }
-    if(player.progress == 100 && !serverGame.finished[player.id]){
-        serverGame.finished[player.id] = true;
-        serverGame.finishedCount++;
-    }
     serverGame.players.forEach(serverPlayer => {
         if(serverPlayer.id == player.id){
             Object.keys(serverPlayer).forEach(key => {
@@ -142,20 +138,25 @@ app.post('/UpdateInfo', (req, res) => {
             })
         }
     });
-    if(player.progress == 100){
+    if(player.progress == 100 && !serverGame.finished[player.id]){
+        serverGame.finished[player.id] = true;
+        serverGame.finishedCount++;
         Text.findOne({guid: serverGame.text.guid}, (err, text) => {
-            text.player = {
-                speed: player.speed,
-                timeNeeded: `${Math.floor(player.timeNeeded / 60 / 60)}:${Math.floor(player.timeNeeded / 60 % 60 / 10)}${Math.floor(player.timeNeeded / 60 % 60 % 10)}`,
-                accuracy: ((serverGame.text.text.length - player.errorCount) / serverGame.text.text.length * 100).toFixed(1)
+            if(!text.player || text.player.speed < player.speed){
+                text.player = {
+                    speed: player.speed,
+                    timeNeeded: `${Math.floor(player.timeNeeded / 60 / 60)}:${Math.floor(player.timeNeeded / 60 % 60 / 10)}${Math.floor(player.timeNeeded / 60 % 60 % 10)}`,
+                    accuracy: ((serverGame.text.text.length - player.errorCount) / serverGame.text.text.length * 100).toFixed(1)
+                }
             }
             text.date = Date.now();
             text.save(err => {
                 if(err){
                     console.error(err);
+                    res.status(500);
+                    res.send(err.message);
                     return;
                 }
-                console.log('player saved successfully');
             })
         })
     }
