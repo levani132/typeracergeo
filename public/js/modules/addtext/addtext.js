@@ -10,11 +10,15 @@ const AddText = {
     },
     saveText (e) {
         e.preventDefault();
-        var text = document.querySelector('#add-text-text').value;
-        var type = document.querySelector('#add-text-type').value;
-        var name = document.querySelector('#add-text-name').value;
-        var author = document.querySelector('#add-text-author').value;
-        var picUrl = document.querySelector('#add-text-picUrl').value;
+        var text = document.querySelector('#add-text-text').value.trim();
+        var type = document.querySelector('#add-text-type').value.trim();
+        var name = document.querySelector('#add-text-name').value.trim();
+        var author = document.querySelector('#add-text-author').value.trim();
+        var picUrl = document.querySelector('#add-text-picUrl').value.trim();
+        if(!(text.length && type.length && name.length && author.length && picUrl.length)){
+            Toastr.callMessage('Fill all inputs');
+            return;
+        }
         Service.AddText({guid: guid(), text, type, name, author, picUrl}).then(success => {
             if(success){
                 Toastr.callMessage('Text succesfully added');
