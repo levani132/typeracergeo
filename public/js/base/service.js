@@ -23,11 +23,11 @@ const Service = {
     GetLoggedInUser () {
         var self = this;
         return new Promise((resolve, reject) => {
-            self.get (this.domain + '/GetLoggedInUser').then((loggedInUser) => {
+            self.post (this.domain + '/GetLoggedInUser').then((loggedInUser) => {
                 User.loggedInUser = loggedInUser;
-                // Temporary
-                User.resetGuestUser();
-                // ---
+                User.loggedIn = true;
+                if(!loggedInUser || typeof loggedInUser == String && !loggedInUser.length)
+                    User.resetGuestUser();
                 resolve();
             }).catch(reject);
         });
@@ -61,5 +61,17 @@ const Service = {
     },
     SearchText (SearchingText) {
         return this.post (this.domain + '/SearchText', {SearchingText});
+    },
+    Login (username, password) {
+        return this.post(this.domain + '/Login', {username, password});
+    },
+    Register (username, password, repassword) {
+        return this.post(this.domain + '/Register', {username, password, repassword});
+    },
+    Logout () {
+        return this.post(this.domain + '/Logout');
+    },
+    AddStatistics (player) {
+        return this.post(this.domain + '/AddStatistics', player);
     }
 }

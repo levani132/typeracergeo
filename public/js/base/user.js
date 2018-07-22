@@ -16,7 +16,6 @@ const guestUser = {
     nRaces: 0,
     wonRaces: 0,
     rank: getRank(0),
-    level: 0,
     id: guid()
 }
 
@@ -24,27 +23,31 @@ const User = {
     loggedIn: false,
     loggedInUser: Object.assign(guestUser, {}),
     resetGuestUser () {
-        this.loggedIn = false;
-        this.loggedInUser = Object.assign(guestUser, {});
+        User.loggedIn = false;
+        User.loggedInUser = Object.assign(guestUser, {});
     },
     addStatistics (player) {
-        if (this.loggedIn) {
-            Service.AddStatistics(player);
+        var update = () => {
+            if(User.loggedInUser.lastTenRaces.length == 10){
+                User.loggedInUser.lastTenRaces.splice(0, 1);
+            }
+            User.loggedInUser.lastTenRaces.push(player.speed);
+            User.loggedInUser.allTimeAvg = Math.round(User.loggedInUser.allTimeAvg * User.loggedInUser.nRaces / (User.loggedInUser.nRaces + 1) + player.speed / (User.loggedInUser.nRaces + 1));
+            User.loggedInUser.nRaces++;
+            if(User.loggedInUser.bestRace < player.speed){
+                User.loggedInUser.bestRace = player.speed;
+            }
+            if(player.place == 1){
+                User.loggedInUser.wonRaces++;
+            }
+            User.loggedInUser.tenAvg = User.loggedInUser.lastTenRaces.length ? Math.round(User.loggedInUser.lastTenRaces.reduce((a, b) => a + b) / User.loggedInUser.lastTenRaces.length) : 0;
+            User.loggedInUser.rank = getRank(User.loggedInUser.tenAvg);
+            Header.refresh();
         }
-        if(this.loggedInUser.lastTenRaces.length == 10){
-            this.loggedInUser.lastTenRaces.splice(0, 1);
+        if (User.loggedIn) {
+            Service.AddStatistics(player).then(update);
+        }else{
+            update();
         }
-        this.loggedInUser.lastTenRaces.push(player.speed);
-        this.loggedInUser.allTimeAvg = Math.round(this.loggedInUser.allTimeAvg * this.loggedInUser.nRaces / (this.loggedInUser.nRaces + 1) + player.speed / (this.loggedInUser.nRaces + 1));
-        this.loggedInUser.nRaces++;
-        if(this.loggedInUser.bestRace < player.speed){
-            this.loggedInUser.bestRace = player.speed;
-        }
-        if(player.place == 1){
-            this.loggedInUser.wonRaces++;
-        }
-        this.loggedInUser.tenAvg = this.loggedInUser.lastTenRaces.length ? Math.round(this.loggedInUser.lastTenRaces.reduce((a, b) => a + b) / this.loggedInUser.lastTenRaces.length) : 0;
-        this.loggedInUser.rank = getRank(this.loggedInUser.tenAvg);
-        Header.refresh();
     }
 }

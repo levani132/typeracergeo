@@ -4,7 +4,14 @@ const Ranks = {
     'საშუალო' : [31,41],
     'პროფესიონალი' : [42, 54],
     'ოსტატი' : [55, 79],
-    'მეგამრბოლელი' : [80, 500]
+    'მეგამრბოლელი' : [80, 500],
+    getRank(points){
+        for(var i = 0; i < Object.keys(Ranks).length; i++){
+            if(Ranks[Object.keys(Ranks)[i]][0] <= points && points <= Ranks[Object.keys(Ranks)[i]][1]){
+                return Object.keys(Ranks)[i];
+            }
+        }
+    }
 };
 
 function getRank(points){
@@ -14,3 +21,6 @@ function getRank(points){
         }
     }
 }
+
+if(typeof module !== 'undefined')
+    module.exports = Ranks

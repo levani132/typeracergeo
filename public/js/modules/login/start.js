@@ -7,8 +7,7 @@ Module.module({
         Router.openModule(this.name);
     },
     view () {
-        Header.disable();
-        Layout.disable();
+        Login.init();
         return Login.view();
     }
 });

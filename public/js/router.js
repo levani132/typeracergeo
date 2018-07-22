@@ -3,6 +3,7 @@ const Router = {
         '' : 'default',
         'race' : 'default',
         'register' : 'login',
+        'logout' : 'login',
         'text' : 'texts'
     },
     components: [],

@@ -30,7 +30,7 @@ time, mark, audio, video {
 }
 
 html, body{
-    min-height: 100%;
+    min-height: 100vh;
     width: 100%;
 }
 
@@ -227,14 +227,14 @@ header {
 }
 
 main {
-    height: 100%;
+    min-height: 100vh;
 }
 
 .main {
     padding: 20px;
     width: 750px;
     background-color: white;
-    min-height: 100%;
+    min-height: 100vh;
     margin: 0 auto;
     position:relative;
     z-index: 0;
@@ -530,9 +530,9 @@ main {
 .login-background-right{
     width: 100%;
     position: relative;
-    height: 100%;
+    height: 100vh;
     transform: skew(-33deg);
-    background-color: var( --dark-color);
+    background-color: var(--dark-color);
     left: 45%;
 }
 
@@ -555,19 +555,17 @@ main {
 }
 
 .login-logo img{
-    width:270px;
+    max-width: 270px;
+    max-height: 100vh;
 }
 
 .login-input-wrapper{
-    position: relative;
-    top: 20%;
-    transform: skew(33deg);
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    transform: skew(33deg) translate(-50%, -50%);
     display: inline-block;
     width: 270px;
-}
-
-.login-left{
-    float: left;
 }
 
 
@@ -586,6 +584,8 @@ main {
     color : white;
     text-align: center;
     line-height: 40px;
+    user-select: none;
+    cursor: pointer;
 }
 
 .login-button:hover{
@@ -593,9 +593,10 @@ main {
 }
 
 .login-left{
-    position: relative;
-    top: 20vh;
-    transform: translateX(90%);
+    position: absolute;
+    left: 25%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .login-register-button-wrapper{
@@ -605,12 +606,15 @@ main {
     color: white;
 }
 
-.login-register-button{
+.login-register-button, .login-register-button:active, 
+.login-register-button:focus, .login-register-button:visited {
     display: inline;
+    color: white;
 }
 
 .login-register-button:hover{
     text-decoration: underline;
+    opacity: 1;
 }
 
 .toastr{
@@ -729,6 +733,7 @@ main {
 .input-wrapper input,
 .input-wrapper textarea{
     margin: 10px 0;
+    box-shadow: 0 0 0 30px white inset;
     outline: none;
 }
 
@@ -744,12 +749,13 @@ main {
     background-color: white;
     font: 400 13.3333px Arial;
     transition: top .3s, left .3s, font-size .3s;
+    cursor: text;
 }
 
-.input-wrapper input:focus+span.input-placeholder,
-.input-wrapper input:valid+span.input-placeholder,
-.input-wrapper textarea:focus+span.input-placeholder,
-.input-wrapper textarea:valid+span.input-placeholder {
+.input-wrapper input:focus+.input-placeholder,
+.input-wrapper input:valid+.input-placeholder,
+.input-wrapper textarea:focus+.input-placeholder,
+.input-wrapper textarea:valid+.input-placeholder {
     top: -5px;
     left: 7px;
     font-size: 10px;

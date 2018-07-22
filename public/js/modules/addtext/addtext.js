@@ -62,25 +62,25 @@ const AddText = {
             <form class="add-text-form">
                 <div class="input-wrapper">
                     <textarea autocomplete="falsea" oninput="AddText.input();" name="text" id="add-text-text" required></textarea>
-                    <span class="input-placeholder">Text</span>
+                    <label for="add-text-text" class="input-placeholder">ტექსტი</label>
                 </div>
                 <div class="input-wrapper">
                     <input autocomplete="falsea" oninput="AddText.input();" name="type" id="add-text-type" type="text" required>
-                    <span class="input-placeholder">Text type</span>
+                    <label for="add-text-type" class="input-placeholder">ტექსტის ტიპი</label>
                 </div>
                 <div class="input-wrapper">
                     <input autocomplete="falsea" oninput="AddText.input();" name="name" id="add-text-name" type="text" required>
-                    <span class="input-placeholder">Text name</span>
+                    <label for="add-text-name" class="input-placeholder">ტექსტის სახელი</label>
                 </div>
                 <div class="input-wrapper">
                     <input autocomplete="falsea" oninput="AddText.input();" name="author" id="add-text-author" type="text" required>
-                    <span class="input-placeholder">Text author</span>
+                    <label for="add-text-author" class="input-placeholder">ტექსტის ავტორი</label>
                 </div>
                 <div class="input-wrapper">
                     <input autocomplete="falsea" oninput="AddText.input();" name="picUrl" id="add-text-picUrl" type="text" required>
-                    <span class="input-placeholder">Text picture url</span>
+                    <label for="add-text-picUrl" class="input-placeholder">ტექსტის სურათის ლინკი</label>
                 </div>
-                <input oninput="AddText.input();" type="submit" value="submit" onclick="AddText.saveText(event)">
+                <input oninput="AddText.input();" type="submit" value="დამატება" onclick="AddText.saveText(event)">
             </form>
             ${this.textView ()}
         `;

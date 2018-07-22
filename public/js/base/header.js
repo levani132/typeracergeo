@@ -11,7 +11,7 @@ const Header = {
         this.refresh();
     },
     enable () {
-        this.disbaled = false;
+        this.disabled = false;
         this.refresh();
     },
     view () {
@@ -36,7 +36,9 @@ const Header = {
                                 <span>${User.loggedInUser.name}</span>
                             </div>
                             <div class="header-user-control inline-block">
-                                <a class="sign-link" href="/login">${User.loggedIn ? 'გამოსვლა' : 'შესვლა'}</a>
+                                <a class="sign-link" href="/${User.loggedIn ? 'logout' : 'login'}">
+                                    ${User.loggedIn ? 'გამოსვლა' : 'შესვლა'}
+                                </a>
                             </div>
                         </div>
                         <div class="right-bottom user-section">
@@ -50,8 +52,11 @@ const Header = {
                                     რანკი<span class="value">${User.loggedInUser.rank}</span>
                                 </div>
                             </li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">წერის დონე<span class="value">${User.loggedInUser.level}%</span></div></li>
-                            <li class="user-mini-info-item"><div class="user-mini-info-text">მოგებული რეისები<span class="value">${User.loggedInUser.wonRaces}</span></div></li>
+                            <li class="user-mini-info-item">
+                                <div class="user-mini-info-text">
+                                    მოგებული რეისები<span class="value">${User.loggedInUser.wonRaces}</span>
+                                </div>
+                            </li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">რეისების რაოდენობა<span class="value">${User.loggedInUser.nRaces}</span></div></li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">საუკეთესი რეისი<span class="value">${User.loggedInUser.bestRace}</span></div></li>
                             <li class="user-mini-info-item"><div class="user-mini-info-text">ბოლო რეისი<span class="value">${User.loggedInUser.lastTenRaces.length ? User.loggedInUser.lastTenRaces[User.loggedInUser.lastTenRaces.length - 1] : 0}</span></div></li>
