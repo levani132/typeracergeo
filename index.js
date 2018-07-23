@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const {Game, Games, Player, guid} = require('./game')
 const Text = require('./text')
 const session = require("express-session")
+const MongoStore = require('connect-mongo')(session)
 const bodyParser = require('body-parser')
 const passport = require('./passport')
 const {User} = require('./schemes')
@@ -19,7 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
