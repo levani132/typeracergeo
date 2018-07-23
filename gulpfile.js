@@ -55,11 +55,6 @@ gulp.task('base', function(){
     .pipe(gulp.dest('build/public/js'))
 });
 
-gulp.task('clean map', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base' ], function(){
-  return gulp.src('build/public/**/*.js.map')
-    .pipe(clean())
-});
-
 gulp.task('img', function(){
   return gulp.src('public/img/**/*.*')
     .pipe(gulp.dest('build/public/img'))
@@ -75,5 +70,10 @@ gulp.task('clean', function(){
     .pipe(clean())
 });
 
-gulp.task('default', [ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base', 'clean map' ]);
-gulp.task('debug', [ 'html', 'css', 'js debug', 'fonts', 'img', 'core', 'base' ]);
+gulp.task('clean map', gulp.series([ 'html', 'css', 'js', 'fonts', 'img', 'core', 'base' ], function(){
+  return gulp.src('build/public/**/*.js.map')
+    .pipe(clean())
+}));
+
+gulp.task('default', gulp.series([ 'clean map' ]));
+gulp.task('debug', gulp.series([ 'html', 'css', 'js debug', 'fonts', 'img', 'core', 'base' ]));

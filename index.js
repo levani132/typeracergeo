@@ -10,7 +10,6 @@ const passport = require('./passport')
 const {User} = require('./schemes')
 const Ranks = require('./public/js/base/ranks')
 const sha256 = require('sha256')
-const flash = require('connect-flash')
 
 mongoose.connect('mongodb://sa:123456qwerty@ds129321.mlab.com:29321/typeracergeo',{ useNewUrlParser: true })
 app.use('/public', express.static(public))
@@ -24,19 +23,11 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 const NEW_GAME = 1, 
         STARTED_NEW_GAME = 2, 
         STARTED_GAME = 3, 
         ENDED_GAME = 5
-
-function logMemory () {
-    const used = process.memoryUsage();
-    for (let key in used) {
-        console.log(`\t${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
-    }
-}
 
 // mongoose.connect('mongodb://127.0.0.1:27017/',{ useNewUrlParser: true })
 var db = mongoose.connection;
@@ -58,7 +49,6 @@ app.post('/GetRandomGame', (req, res) => {
             game.text = text
             game.textTime = text.text.split(' ').length * 6
             game.progress = NEW_GAME
-            logMemory();
             res.send(game)
         })
     }else{
@@ -79,7 +69,6 @@ app.post('/GetPracticeGame', (req, res) => {
         game.text = text
         game.textTime = text.text.split(' ').length * 6
         Games.startNewGame(game)
-        logMemory();
         res.send(game)
     })
 })
@@ -92,7 +81,6 @@ app.post('/GetFriendGame', (req, res) => {
         game.text = text
         game.textTime = text.text.split(' ').length * 6
         game.progress = NEW_GAME
-        logMemory();
         res.send(game)
     };
     if(gameId){
