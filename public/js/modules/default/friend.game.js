@@ -53,7 +53,7 @@ const FriendGame = {
             self.game.players = game.players.map(player => {
                 var player = Player.copy(player)
                 player.isMe = false;
-                if(player.id == User.loggedInUser.id){
+                if(player.id == User.loggedInUser._id){
                     player.isMe = true;
                     self.alreadyPlaying = true;
                 }
@@ -81,7 +81,7 @@ const FriendGame = {
                 self.game.players = game.players.map(player => {
                     var player = Player.copy(player)
                     player.isMe = false;
-                    if(player.id == User.loggedInUser.id){
+                    if(player.id == User.loggedInUser._id){
                         player.isMe = true;
                         self.alreadyPlaying = true;
                     }

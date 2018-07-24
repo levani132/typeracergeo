@@ -41,10 +41,31 @@ var games = new Games()
 
 var friendGames = new Games()
 
+function deleteGame(gameId, list){
+    if(list.games[gameId]){
+        delete list.games[gameId];
+        console.log('game deleted. games in RAM:', Object.keys(games.games).length + Object.keys(friendGames.games).length);
+    }
+}
+
+function startNewGame(game, games){
+    clearTimeout(gamesToDelete[game.id]);
+    setTimeout(() => {
+        deleteGame(game.id, games)
+    }, (60 + game.textTime) * 1000)
+    console.log('game started, will be deleted in:', (60 + game.textTime), 'seconds');
+    Games.startNewGame(game)
+}
+
+var gamesToDelete = {}
+
 app.post('/GetRandomGame', (req, res) => {
     var game = games.getLastOpenGame()
     if(!game || game.players.some(player => player.id == req.body.id)){
         game = games.getNewGame()
+        gamesToDelete[game.id] = setTimeout(() => {
+            deleteGame(game.id,  games);
+        }, 60000);
         game.players.push(req.body)
         Text.findRandom().then(text => {
             game.text = text
@@ -55,7 +76,7 @@ app.post('/GetRandomGame', (req, res) => {
     }else{
         game.players.push(req.body)
         if (game.players.length == 2){
-            Games.startNewGame(game)
+            startNewGame(game, games)
         }
         res.send(game)
     }
@@ -63,13 +84,16 @@ app.post('/GetRandomGame', (req, res) => {
 
 app.post('/GetPracticeGame', (req, res) => {
     var game = games.getNewGame()
+    gamesToDelete[game.id] = setTimeout(() => {
+        deleteGame(game.id, games);
+    }, 60000);
     game.players.push(req.body)
     game.waitingTime = 5
     game.progress = STARTED_NEW_GAME
     Text.findRandom().then(text => {
         game.text = text
         game.textTime = text.text.split(' ').length * 6
-        Games.startNewGame(game)
+        startNewGame(game, games)
         res.send(game)
     })
 })
@@ -89,6 +113,9 @@ app.post('/GetFriendGame', (req, res) => {
         if(!game){
             friendGames.games[gameId] = new Game()
             game = friendGames.games[gameId]
+            gamesToDelete[game.id] = setTimeout(() => {
+                deleteGame(game.id, friendGames);
+            }, 60000);
             game.id = gameId;
             if(textId) {
                 Text.find({guid: textId}, (err, dbres) => resolve(dbres[0]));
@@ -100,6 +127,9 @@ app.post('/GetFriendGame', (req, res) => {
         }
     }else{
         game = friendGames.getNewGame()
+        gamesToDelete[game.id] = setTimeout(() => {
+            deleteGame(game.id, friendGames);
+        }, 60000);
         Text.findRandom().then(resolve)
     }
 })
@@ -117,7 +147,7 @@ app.post('/ConnectFriendGame', (req, res) => {
     if(!playerExists)
         game.players.push(player)
     if (game.players.length == 2 && game.progress < STARTED_NEW_GAME){
-        Games.startNewGame(game)
+        startNewGame(game, friendGames);
     }
     res.send(game)
 })
@@ -162,13 +192,6 @@ app.post('/UpdateInfo', (req, res) => {
     if(serverGame.progress == ENDED_GAME && !serverGame.abandonedUsers.includes(player.id)){
         serverGame.sentEnded++;
         serverGame.abandonedUsers.push(player.id);
-        if(serverGame.sentEnded == serverGame.players.length){
-            if(games.games[serverGame.id]){
-                delete games.games[serverGame.id];
-            }else{
-                delete friendGames.games[serverGame.id];
-            }
-        }
     }
 })
 

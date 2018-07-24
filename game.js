@@ -59,7 +59,7 @@ class Games {
     }
 
     getLastOpenGame () {
-        while(this.openGames.length && (this.openGames[this.openGames.length - 1].players.length == 5 || this.openGames[this.openGames.length - 1].waitingTime < 5)){
+        while(this.openGames.length && (this.openGames[this.openGames.length - 1].players.length == 5 || this.openGames[this.openGames.length - 1].waitingTime < 5 || !this.games[this.openGames[this.openGames.length - 1].id])){
             this.openGames.pop()
         }
         if(!this.openGames.length){
