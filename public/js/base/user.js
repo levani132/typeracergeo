@@ -16,7 +16,7 @@ const guestUser = {
     nRaces: 0,
     wonRaces: 0,
     rank: getRank(0),
-    id: guid()
+    _id: guid()
 }
 
 const User = {

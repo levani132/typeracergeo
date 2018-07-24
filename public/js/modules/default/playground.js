@@ -4,7 +4,7 @@ var PlayGround = {
         this.states = [GameState("")];
         this.isOffline = false;
         this.counterInterval = null;
-        this.player = new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser.id, 0, 0, 0);
+        this.player = new Player(User.loggedInUser.name, 0, 0, 0, true, User.loggedInUser._id, 0, 0, 0);
         this.gameId = null;
         var serviceCall;
         if (Router.innerRoute() == 'world') {
@@ -25,7 +25,7 @@ var PlayGround = {
             self.game = new Game(game);
             self.game.players.forEach(player => {
                 player.isMe = false;
-                if(player.id == User.loggedInUser.id){
+                if(player.id == User.loggedInUser._id){
                     player.isMe = true;
                 }
             })
@@ -61,10 +61,10 @@ var PlayGround = {
         var self = this;
         this.mainInterval = setInterval(() => {
             Service.UpdateInfo({gameId: self.game.id, player: self.player}).then(game => {
-                self.game.players = game.players.map(player => player.id != User.loggedInUser.id ? Player.copy(player) : self.player);
+                self.game.players = game.players.map(player => player.id != User.loggedInUser._id ? Player.copy(player) : self.player);
                 self.game.players.forEach(player => {
                     player.isMe = false;
-                    if(player.id == User.loggedInUser.id){
+                    if(player.id == User.loggedInUser._id){
                         player.isMe = true;
                         self.player = player;
                     }
@@ -114,7 +114,7 @@ var PlayGround = {
         
         while (curWord == PlayGround.raceInput.value.substring(0, wordEnd - newState.green.b + 1)) {
             PlayGround.raceInput.value = PlayGround.raceInput.value.substr(wordEnd - newState.green.b + 1);
-            PlayGround.game.playerProgress(User.loggedInUser.id, newState.greenLine.b / newState.text.length);
+            PlayGround.game.playerProgress(User.loggedInUser._id, newState.greenLine.b / newState.text.length);
             newState.green.b = wordEnd == newState.text.length ? wordEnd : wordEnd + 1;
             if(wordEnd == newState.text.length)
                 break;
@@ -126,17 +126,17 @@ var PlayGround = {
         newState.lastInput = PlayGround.raceInput.value;
         PlayGround.states.push(newState);
         if (!newState.correct) {
-            PlayGround.game.playerError(User.loggedInUser.id);
+            PlayGround.game.playerError(User.loggedInUser._id);
         }
         if(PlayGround.states[PlayGround.states.length - 1].position == PlayGround.states[PlayGround.states.length - 1].text.length && PlayGround.states[PlayGround.states.length - 1].correct){
             PlayGround.raceInput.value = "";
-            PlayGround.game.playerProgress(User.loggedInUser.id, 
+            PlayGround.game.playerProgress(User.loggedInUser._id, 
                 PlayGround.states[PlayGround.states.length - 1].position / PlayGround.states[PlayGround.states.length - 1].text.length);
-            PlayGround.game.playerPlace(User.loggedInUser.id, ++PlayGround.game.finishedCount);
+            PlayGround.game.playerPlace(User.loggedInUser._id, ++PlayGround.game.finishedCount);
             PlayGround.game.progress = ENDED_FOR_ME;
             PlayGround.player.timeNeeded = PlayGround.game.timePassed;
             if(!PlayGround.isOffline){
-                User.addStatistics(PlayGround.game.playerFind(User.loggedInUser.id));
+                User.addStatistics(PlayGround.game.playerFind(User.loggedInUser._id));
             }
             document.querySelector('.race-section').outerHTML = PlayGround.view();
         }
